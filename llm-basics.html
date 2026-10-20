@@ -257,6 +257,8 @@
   .msg.you{ align-self:flex-end; background:var(--accent); color:#241a00; border-bottom-right-radius:6px; font-weight:600; }
   .msg.bot{ align-self:flex-start; background:var(--panel2); border:1px solid var(--line); border-bottom-left-radius:6px; }
   .msg.bot .wrong{ color:var(--bad); font-weight:700; }
+  .msg.bot .right{ color:var(--good); font-weight:700; }
+  .msg .who{ display:block; font-family:var(--font-mono); font-size:.55em; color:var(--muted); letter-spacing:.08em; margin-bottom:.25rem; text-transform:uppercase; }
   .hook-q{ margin-top:clamp(1.2rem,3vw,2rem); color:var(--muted); font-size:clamp(.95rem,1.5vw,1.2rem); }
 
   /* --- visual: BPE merge ladder --- */
@@ -329,13 +331,14 @@
   <div class="topbar"><span></span><span>02 / 09</span></div>
   <div class="slide-content">
     <div class="hook-wrap">
-      <div class="eyebrow reveal" data-editable>A puzzle</div>
-      <h2 class="reveal" data-editable>It can write essays and code… so why does it fail this?</h2>
+      <div class="eyebrow reveal" data-editable>A famous fail · 2024</div>
+      <h2 class="reveal" data-editable>It could write essays and code… so why did it fail this?</h2>
       <div class="chat reveal">
         <div class="msg you" data-editable>How many r's are in "strawberry"?</div>
-        <div class="msg bot" data-editable>There are <span class="wrong">2</span> r's in "strawberry".</div>
+        <div class="msg bot" data-editable><span class="who">Chatbot · 2024</span>There are <span class="wrong">2</span> r's in "strawberry".</div>
+        <div class="msg bot" data-editable><span class="who">Chatbot · today</span>There are <span class="right">3</span> r's in "strawberry": s-t-r-a-w-b-e-<b>r</b>-<b>r</b>-y.</div>
       </div>
-      <p class="hook-q reveal" data-editable>Hold that thought — by the end you'll know exactly why.</p>
+      <p class="hook-q reveal" data-editable>Why the old one failed, and how the new one gets it right, is the same idea.</p>
     </div>
   </div>
 </section>
@@ -417,10 +420,10 @@
       <div class="topic-main">
         <div class="head reveal"><span class="step">PUZZLE SOLVED</span></div>
         <h2 class="reveal" data-editable>It never saw the letters</h2>
-        <p class="lead reveal" data-editable>To the model, "strawberry" is just a few chunks. The r's are <b>hidden inside</b> them — so it has to guess.</p>
+        <p class="lead reveal" data-editable>To the model, "strawberry" is just a few chunks. The r's are <b>hidden inside</b> them — so older models had to guess.</p>
         <ul class="points reveal">
-          <li><span class="tag">Also</span><span data-editable>Chatbot limits and prices are counted in <b>tokens</b>, not words.</span></li>
-          <li><span class="tag">Also</span><span data-editable>Code, emoji and many non-English languages use <b>more tokens</b> — slower and pricier.</span></li>
+          <li><span class="tag">Fix</span><span data-editable>Newer models often <b>spell the word out</b> first — s-t-r-a-w… — so each letter becomes its own token they can count.</span></li>
+          <li><span class="tag">Also</span><span data-editable>Chatbot limits and prices are counted in <b>tokens</b> — and code, emoji and other languages use more of them.</span></li>
         </ul>
       </div>
       <div class="visual reveal" aria-hidden="true">
