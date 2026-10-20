@@ -250,17 +250,6 @@
   /* ===========================================
      LLM BASICS — extra visuals
      =========================================== */
-  .hook-wrap{ width:100%; max-width:900px; margin:0 auto; }
-  .hook-wrap h2{ font-size:clamp(1.8rem,4.4vw,3.2rem); font-weight:700; line-height:1.08; margin-bottom:clamp(1.2rem,3vw,2rem); }
-  .chat{ display:flex; flex-direction:column; gap:.8rem; max-width:620px; }
-  .msg{ padding:.85rem 1.15rem; border-radius:18px; font-size:clamp(1rem,1.7vw,1.35rem); line-height:1.4; max-width:85%; }
-  .msg.you{ align-self:flex-end; background:var(--accent); color:#241a00; border-bottom-right-radius:6px; font-weight:600; }
-  .msg.bot{ align-self:flex-start; background:var(--panel2); border:1px solid var(--line); border-bottom-left-radius:6px; }
-  .msg.bot .wrong{ color:var(--bad); font-weight:700; }
-  .msg.bot .right{ color:var(--good); font-weight:700; }
-  .msg .who{ display:block; font-family:var(--font-mono); font-size:.55em; color:var(--muted); letter-spacing:.08em; margin-bottom:.25rem; text-transform:uppercase; }
-  .hook-q{ margin-top:clamp(1.2rem,3vw,2rem); color:var(--muted); font-size:clamp(.95rem,1.5vw,1.2rem); }
-
   /* --- visual: BPE merge ladder --- */
   .ladder{ display:flex; flex-direction:column; gap:.75rem; align-items:center; }
   .ladder .row{ display:flex; gap:.35rem; }
@@ -312,7 +301,7 @@
      SLIDE 1 — TITLE
      ============================================================ -->
 <section class="slide title-slide" id="s1">
-  <div class="topbar"><span></span><span>01 / 09</span></div>
+  <div class="topbar"><span></span><span>01 / 08</span></div>
   <div class="slide-content" style="justify-content:center;">
     <h1 class="reveal" data-editable>How an AI chatbot <span>reads and writes</span></h1>
     <p class="sub reveal" data-editable>Two simple ideas behind every large language model — no math, and a live demo at the end.</p>
@@ -325,29 +314,10 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 2 — HOOK
+     SLIDE 2 — TOKENIZATION
      ============================================================ -->
 <section class="slide" id="s2">
-  <div class="topbar"><span></span><span>02 / 09</span></div>
-  <div class="slide-content">
-    <div class="hook-wrap">
-      <div class="eyebrow reveal" data-editable>A famous fail · 2024</div>
-      <h2 class="reveal" data-editable>It could write essays and code… so why did it fail this?</h2>
-      <div class="chat reveal">
-        <div class="msg you" data-editable>How many r's are in "strawberry"?</div>
-        <div class="msg bot" data-editable><span class="who">Chatbot · 2024</span>There are <span class="wrong">2</span> r's in "strawberry".</div>
-        <div class="msg bot" data-editable><span class="who">Chatbot · today</span>There are <span class="right">3</span> r's in "strawberry": s-t-r-a-w-b-e-<b>r</b>-<b>r</b>-y.</div>
-      </div>
-      <p class="hook-q reveal" data-editable>Why the old one failed, and how the new one gets it right, is the same idea.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     SLIDE 3 — TOKENIZATION
-     ============================================================ -->
-<section class="slide" id="s3">
-  <div class="topbar"><span></span><span>03 / 09</span></div>
+  <div class="topbar"><span></span><span>02 / 08</span></div>
   <div class="slide-content">
     <div class="topic-grid">
       <div class="topic-main">
@@ -374,10 +344,10 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 4 — WHERE CHUNKS COME FROM (BPE)
+     SLIDE 3 — WHERE CHUNKS COME FROM (BPE)
      ============================================================ -->
-<section class="slide" id="s4">
-  <div class="topbar"><span></span><span>04 / 09</span></div>
+<section class="slide" id="s3">
+  <div class="topbar"><span></span><span>03 / 08</span></div>
   <div class="slide-content">
     <div class="topic-grid">
       <div class="topic-main">
@@ -411,16 +381,16 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 5 — STRAWBERRY PAYOFF
+     SLIDE 4 — WHY IT MATTERS
      ============================================================ -->
-<section class="slide" id="s5">
-  <div class="topbar"><span></span><span>05 / 09</span></div>
+<section class="slide" id="s4">
+  <div class="topbar"><span></span><span>04 / 08</span></div>
   <div class="slide-content">
     <div class="topic-grid">
       <div class="topic-main">
-        <div class="head reveal"><span class="step">PUZZLE SOLVED</span></div>
-        <h2 class="reveal" data-editable>It never saw the letters</h2>
-        <p class="lead reveal" data-editable>To the model, "strawberry" is just a few chunks. The r's are <b>hidden inside</b> them — so older models had to guess.</p>
+        <div class="head reveal"><span class="step">IDEA 1 · WHY IT MATTERS</span></div>
+        <h2 class="reveal" data-editable>It never sees the letters</h2>
+        <p class="lead reveal" data-editable>To the model, "strawberry" is just a few chunks. The r's are <b>hidden inside</b> them — which is why chatbots famously miscounted them.</p>
         <ul class="points reveal">
           <li><span class="tag">Fix</span><span data-editable>Newer models often <b>spell the word out</b> first — s-t-r-a-w… — so each letter becomes its own token they can count.</span></li>
           <li><span class="tag">Also</span><span data-editable>Chatbot limits and prices are counted in <b>tokens</b> — and code, emoji and other languages use more of them.</span></li>
@@ -444,10 +414,10 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 6 — NEXT-TOKEN PREDICTION
+     SLIDE 5 — NEXT-TOKEN PREDICTION
      ============================================================ -->
-<section class="slide" id="s6">
-  <div class="topbar"><span></span><span>06 / 09</span></div>
+<section class="slide" id="s5">
+  <div class="topbar"><span></span><span>05 / 08</span></div>
   <div class="slide-content">
     <div class="topic-grid">
       <div class="topic-main">
@@ -473,10 +443,10 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 7 — TEMPERATURE
+     SLIDE 6 — TEMPERATURE
      ============================================================ -->
-<section class="slide" id="s7">
-  <div class="topbar"><span></span><span>07 / 09</span></div>
+<section class="slide" id="s6">
+  <div class="topbar"><span></span><span>06 / 08</span></div>
   <div class="slide-content">
     <div class="topic-grid">
       <div class="topic-main">
@@ -510,10 +480,10 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 8 — LIVE DEMO
+     SLIDE 7 — LIVE DEMO
      ============================================================ -->
-<section class="slide" id="s8">
-  <div class="topbar"><span></span><span>08 / 09</span></div>
+<section class="slide" id="s7">
+  <div class="topbar"><span></span><span>07 / 08</span></div>
   <div class="slide-content">
     <div class="obj-wrap">
       <div class="eyebrow reveal" data-editable>Live demo</div>
@@ -531,10 +501,10 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 9 — CLOSING
+     SLIDE 8 — CLOSING
      ============================================================ -->
-<section class="slide" id="s9">
-  <div class="topbar"><span></span><span>09 / 09</span></div>
+<section class="slide" id="s8">
+  <div class="topbar"><span></span><span>08 / 08</span></div>
   <div class="slide-content">
     <div class="close-wrap">
       <div class="eyebrow reveal" data-editable>The whole trick</div>
