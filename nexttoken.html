@@ -15,7 +15,6 @@
   .bar .w{text-align:right;color:var(--ink);font-weight:700}
   .bar .track{height:18px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;overflow:hidden}
   .bar .track i{display:block;height:100%;background:linear-gradient(90deg,#3fce8f,#6db4ff);transition:width .15s}
-  .bar.pick .track i{background:linear-gradient(90deg,#f4b942,#ff9d3f)}
   .bar .p{color:var(--muted);font-variant-numeric:tabular-nums}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
   .field input[type=range]{width:min(360px,64vw)}
@@ -23,6 +22,11 @@
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
+  .lastpick{font-size:13px;color:var(--muted);margin:10px 2px 0;min-height:18px}
+  .lastpick b{color:var(--accent)}
+  .versions{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+  .versions .v{background:#0a1220;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:16px}
+  .versions .v .odd{color:var(--accent);font-weight:700}
 </style>
 
 <div id="site-nav"></div>
@@ -41,9 +45,12 @@
     <div class="btnrow">
       <button class="primary" id="next">▸ Next token</button>
       <button id="auto">⏩ Auto-write</button>
+      <button id="three">🎲 Write 3 versions</button>
       <button id="reset">Reset</button>
       <label class="field">Temperature = <b id="tv">0.80</b><input type="range" id="temp" min="10" max="200" step="1" value="80"></label>
     </div>
+    <div class="lastpick" id="lastpick"></div>
+    <div class="versions" id="versions"></div>
     <p class="muted" style="font-size:12px;margin:10px 2px 0">Probabilities for the <b>next</b> token (given the text so far), after temperature:</p>
     <div class="bars" id="bars"></div>
     <div class="hintbox" id="hint"></div>
@@ -74,7 +81,7 @@
   // Tiny toy "language model": last token → weighted next tokens. Illustrative, not trained.
   var M = {
     "START": [["the",3],["a",2],["our",1],["when",1]],
-    "the": [["cat",2],["robot",2],["sun",1.5],["city",1.5],["scientist",1.5],["dog",1],["forest",1],["old",1]],
+    "the": [["cat",3],["robot",2],["sun",1.5],["city",1.5],["scientist",1.5],["dog",1],["forest",1],["old",1]],
     "a": [["small",2],["curious",1.5],["giant",1.5],["quiet",1],["clever",1.5]],
     "our": [["model",1.5],["team",1],["story",1]],
     "when": [["the",2],["night",1],["morning",1]],
@@ -117,18 +124,28 @@
     "and": [["the",2],["it",1.5],["we",1],["a",1]],
     "then": [["the",2],["it",1.5],["everything",1]]
   };
+  // Two-token contexts take priority, so "on the" can lead somewhere specific.
+  var M2 = {
+    "on the": [["mat",3],["sofa",1.5],["roof",1.2],["moon",0.8]],
+    "on a": [["giant",1.5],["windowsill",1.5],["cloud",1]]
+  };
+  M["mat"] = [[".",3],["and",1]];
   var FB = [[".",2.5],["and",1.5],["then",1],["again",1],["slowly",1],["softly",0.8]];
 
-  var toks = [], temp = 0.80, auto = null, lastPick = null;
+  var toks = [], temp = 0.80, auto = null, lastPick = null, lastP = 0;
 
   function ctx() { return toks.length ? toks[toks.length - 1] : "START"; }
-  function dist() {
-    var raw = M[ctx()] || FB, s = 0; raw.forEach(function (e) { s += e[1]; });
+  function dist(seq) {
+    seq = seq || toks;
+    var last = seq.length ? seq[seq.length - 1] : "START";
+    var raw = (seq.length > 1 && M2[seq[seq.length - 2] + " " + last]) || M[last] || FB, s = 0;
+    raw.forEach(function (e) { s += e[1]; });
     var z = 0, q = raw.map(function (e) { var v = Math.pow(e[1] / s, 1 / temp); z += v; return [e[0], v]; });
     q.forEach(function (e) { e[1] /= z; });
     return q.sort(function (a, b) { return b[1] - a[1]; });
   }
-  function pick(q) { var r = Math.random(), c = 0; for (var i = 0; i < q.length; i++) { c += q[i][1]; if (r <= c) return q[i][0]; } return q[0][0]; }
+  // At the slider minimum, sample greedily so repeated runs match exactly.
+  function pick(q) { if (temp <= 0.1) return q[0][0]; var r = Math.random(), c = 0; for (var i = 0; i < q.length; i++) { c += q[i][1]; if (r <= c) return q[i][0]; } return q[0][0]; }
 
   function renderOut() {
     var s = "";
@@ -144,8 +161,7 @@
   function renderBars() {
     var q = dist().slice(0, 6);
     document.getElementById("bars").innerHTML = q.map(function (e) {
-      var isPick = e[0] === lastPick && toks.length && toks[toks.length - 1] === lastPick;
-      return '<div class="bar' + (isPick ? " pick" : "") + '"><div class="w">' + (e[0] === "." ? "· (end)" : e[0]) +
+      return '<div class="bar"><div class="w">' + (e[0] === "." ? "· (end)" : e[0]) +
         '</div><div class="track"><i style="width:' + (e[1] * 100).toFixed(0) + '%"></i></div><div class="p">' + (e[1] * 100).toFixed(0) + "%</div></div>";
     }).join("");
   }
@@ -155,11 +171,34 @@
       : "🔮 <b>Moderate temperature</b>: mostly likely tokens, with room for variety. Press <b>Next token</b> to sample the highlighted word, or <b>Auto-write</b> to let it run.";
     document.getElementById("hint").innerHTML = msg;
   }
-  function draw() { renderOut(); renderBars(); renderHint(); }
+  function renderLastPick() {
+    document.getElementById("lastpick").innerHTML = lastPick
+      ? "Last pick: <b>" + (lastPick === "." ? "· (end)" : lastPick) + "</b> — it had a " + Math.round(lastP * 100) + "% chance."
+      : "";
+  }
+  function draw() { renderOut(); renderBars(); renderHint(); renderLastPick(); }
 
+  function sentence(seq) {
+    var s = seq.map(function (e, i) { return (e.t === "." ? "" : (i ? " " : "")) + (e.p < 0.15 ? '<span class="odd">' + e.t + "</span>" : e.t); }).join("");
+    return s.replace(/^(<span class="odd">)?([a-z])/, function (m, sp, ch) { return (sp || "") + ch.toUpperCase(); });
+  }
+  function writeOne() {
+    var seq = [], words = [];
+    while (words.length < 16 && words[words.length - 1] !== ".") {
+      var q = dist(words), t = pick(q), p = 0;
+      q.forEach(function (e) { if (e[0] === t) p = e[1]; });
+      words.push(t); seq.push({ t: t, p: p });
+    }
+    if (words[words.length - 1] !== ".") seq.push({ t: ".", p: 1 });
+    return sentence(seq);
+  }
   function step() {
-    if (toks.length >= 16 && ctx() !== "START") { toks.push("."); }
-    else { lastPick = pick(dist()); toks.push(lastPick); }
+    if (toks.length >= 16 && ctx() !== "START") { toks.push("."); lastPick = "."; lastP = 1; }
+    else {
+      var q = dist(); lastPick = pick(q); lastP = 0;
+      q.forEach(function (e) { if (e[0] === lastPick) lastP = e[1]; });
+      toks.push(lastPick);
+    }
     draw();
     if (toks[toks.length - 1] === ".") stopAuto();
   }
@@ -171,7 +210,12 @@
     if (toks.length && toks[toks.length - 1] === ".") { toks = []; lastPick = null; }
     this.textContent = "⏸ Stop"; auto = setInterval(step, 520);
   };
-  document.getElementById("reset").onclick = function () { stopAuto(); toks = []; lastPick = null; draw(); };
+  document.getElementById("reset").onclick = function () { stopAuto(); toks = []; lastPick = null; document.getElementById("versions").innerHTML = ""; draw(); };
+  document.getElementById("three").onclick = function () {
+    document.getElementById("versions").innerHTML = '<p class="muted" style="font-size:12px;margin:0 2px">3 versions at temperature ' + temp.toFixed(2) +
+      ' (<span style="color:var(--accent);font-weight:700">gold</span> = an unlikely pick, under 15%):</p>' +
+      [0, 1, 2].map(function () { return '<div class="v">' + writeOne() + "</div>"; }).join("");
+  };
   document.getElementById("temp").addEventListener("input", function () { temp = +this.value / 100; document.getElementById("tv").textContent = temp.toFixed(2); draw(); });
 
   draw();

@@ -22,6 +22,13 @@
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
+  #corpus{min-height:52px}
+  .bpe-step{font-size:15px;margin:12px 0 4px}
+  .bpe-words{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+  .bpe-word{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+  .bpe-word .n{color:var(--muted);font-size:12px;width:34px;text-align:right;margin-right:6px;font-variant-numeric:tabular-nums}
+  .tk.fresh{outline:2px solid var(--accent);outline-offset:1px}
+  .vocab{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
 </style>
 
 <div id="site-nav"></div>
@@ -48,8 +55,25 @@
       <button data-t="Antidisestablishmentarianism is an unquestionably supercalifragilistic word.">Rare long words</button>
       <button data-t="for (let i = 0; i < 10; i++) { print(i); }">Code</button>
       <button data-t="In 2024 the model scored 99.7% 🎉🔥">Numbers &amp; emoji</button>
+      <button data-t="How many r's are in strawberry?">Strawberry</button>
     </div>
     <div class="hintbox" id="hint"></div>
+  </div>
+
+  <h2 id="bpe">Where do the chunks come from?</h2>
+  <div class="card">
+    <p class="muted" style="margin:0 0 10px">Nobody picks tokens by hand. Start with every letter as its own piece, find the pair of pieces that sits
+      side by side <b>most often</b>, and glue it into one new token. Repeat. This is <b>byte-pair encoding (BPE)</b> — type your own text to try it.</p>
+    <textarea id="corpus" spellcheck="false">the cat sat on the mat then the cat ate the hat that the bat had</textarea>
+    <div class="btnrow" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+      <button class="primary" id="bpe-step">＋ Glue most common pair</button>
+      <button id="bpe-all">⏩ Glue all</button>
+      <button id="bpe-reset">Reset</button>
+    </div>
+    <div class="bpe-step" id="bpe-msg"></div>
+    <div class="bpe-words" id="bpe-words"></div>
+    <p class="muted" style="font-size:12px;margin:14px 2px 0">Tokens learned so far:</p>
+    <div class="vocab" id="bpe-vocab"></div>
   </div>
 
   <h2>Why tokens matter</h2>
@@ -75,7 +99,7 @@
 <script>
 (function () {
   var WORDS = ("the a an and or but to of in on at for with as by from is it be was are were been has have had do does did not this that these those he she they we you i him her them his their your our its my me us who what which when where why how if then than so up out down no yes can will would could should may might must one two three four time year day way man woman child people world life hand part place case week month company system number group problem fact water fire earth air light dark sound star moon cat dog house tree car book model data code word text learn train think write read make see go get come know take give find tell ask work call try need feel become leave put mean keep let begin seem help talk turn start show hear play run move like live love believe bring happen provide sit stand lose pay meet include continue set change lead understand watch follow stop create speak spend grow open walk win teach offer remember consider appear buy serve build stay fall cut reach look at over into about after before again very just more most some many much little big small good new old high low long short quick slow").split(" ");
-  var SUF = ["ing", "ed", "es", "s", "ly", "er", "est", "ers", "ion", "tion", "sion", "ment", "ness", "ful", "less", "able", "ible", "ity", "ize", "ise", "ation", "ical", "ous", "al", "ry", "ling", "ink", "kl", "'s", "n't", "'re", "'ve", "'ll", "'d", "'m"];
+  var SUF = ["ing", "ed", "es", "s", "ly", "er", "est", "ers", "ion", "tion", "sion", "ment", "ness", "ful", "less", "able", "ible", "ity", "ize", "ise", "ation", "ical", "ous", "al", "ry", "ling", "ink", "kl", "str", "aw", "berry", "'s", "n't", "'re", "'ve", "'ll", "'d", "'m"];
   var VOC = {}, maxLen = 1;
   function add(t) { VOC[t] = 1; if (t.length > maxLen) maxLen = t.length; }
   WORDS.forEach(function (w) { add(w); add(" " + w); });
@@ -110,7 +134,9 @@
     document.getElementById("m-tok").textContent = toks.length;
     document.getElementById("m-chr").textContent = s.length;
     document.getElementById("m-rat").textContent = toks.length ? (s.length / toks.length).toFixed(1) : "0";
-    document.getElementById("hint").innerHTML = /[\uD800-\uDFFF]/.test(s)
+    document.getElementById("hint").innerHTML = /strawberry/i.test(s)
+      ? "✂️ The model sees \"strawberry\" as just <b>str + aw + berry</b> — three chunks, not ten letters. The three r's are hidden inside the chunks, which is why chatbots often miscount them."
+      : /[\uD800-\uDFFF]/.test(s)
       ? "✂️ Notice the emoji and odd characters explode into several tokens each — they're rare byte sequences, so they're expensive. Numbers often split digit-by-digit too, which is partly why LLMs struggle with arithmetic."
       : "✂️ " + toks.length + " tokens for " + s.length + " characters (~" + (s.length / Math.max(1, toks.length)).toFixed(1) + " chars/token). Common words are single chips; longer/rarer words split into subword pieces. See how each token carries its leading space (␣).";
   }
@@ -120,5 +146,58 @@
     b.onclick = function () { document.getElementById("in").value = b.dataset.t; render(); };
   });
   render();
+
+  // BPE: words as piece arrays, weighted by how often each word appears.
+  var bw, learned, fresh;
+  function bpeReset() {
+    var counts = {};
+    document.getElementById("corpus").value.toLowerCase().split(/[^a-z']+/).forEach(function (w) { if (w) counts[w] = (counts[w] || 0) + 1; });
+    bw = Object.keys(counts).map(function (w) { return { parts: w.split(""), n: counts[w] }; })
+      .sort(function (a, b) { return b.n - a.n; });
+    learned = []; fresh = null;
+    bpeRender("Every letter starts as its own piece. Press <b>Glue most common pair</b>.");
+  }
+  function topPair() {
+    var pc = {}, best = null;
+    bw.forEach(function (w) {
+      for (var i = 0; i < w.parts.length - 1; i++) { var k = w.parts[i] + "\u0000" + w.parts[i + 1]; pc[k] = (pc[k] || 0) + w.n; }
+    });
+    Object.keys(pc).forEach(function (k) { if (!best || pc[k] > pc[best]) best = k; });
+    return best && { a: best.split("\u0000")[0], b: best.split("\u0000")[1], n: pc[best] };
+  }
+  function bpeStep() {
+    var p = topPair();
+    if (!p) { bpeRender("✅ Done — every word is now a single token."); return false; }
+    var t = p.a + p.b;
+    bw.forEach(function (w) {
+      var out = [];
+      for (var i = 0; i < w.parts.length; i++) {
+        if (i < w.parts.length - 1 && w.parts[i] === p.a && w.parts[i + 1] === p.b) { out.push(t); i++; } else out.push(w.parts[i]);
+      }
+      w.parts = out;
+    });
+    learned.push(t); fresh = t;
+    bpeRender("Step " + learned.length + ": <b>\"" + p.a + "\" + \"" + p.b + "\"</b> sit side by side " + p.n + "× — the most of any pair — so they become one token: <b>\"" + t + "\"</b>.");
+    return true;
+  }
+  function chip(t) { var h = hue(t); return '<span class="tk' + (t === fresh ? " fresh" : "") + '" style="background:hsl(' + h + ',55%,22%);color:hsl(' + h + ',80%,80%)">' + t + "</span>"; }
+  function bpeRender(msg) {
+    document.getElementById("bpe-msg").innerHTML = msg;
+    document.getElementById("bpe-words").innerHTML = bw.map(function (w) {
+      return '<div class="bpe-word"><span class="n">' + w.n + "×</span>" + w.parts.map(chip).join("") + "</div>";
+    }).join("");
+    document.getElementById("bpe-vocab").innerHTML = learned.length ? learned.map(chip).join("") : '<span class="muted" style="font-size:13px">none yet</span>';
+  }
+  var bpeAuto = null;
+  function stopAll() { clearInterval(bpeAuto); bpeAuto = null; document.getElementById("bpe-all").textContent = "⏩ Glue all"; }
+  document.getElementById("bpe-step").onclick = function () { stopAll(); bpeStep(); };
+  document.getElementById("bpe-all").onclick = function () {
+    if (bpeAuto) { stopAll(); return; }
+    this.textContent = "⏸ Stop";
+    bpeAuto = setInterval(function () { if (!bpeStep()) stopAll(); }, 700);
+  };
+  document.getElementById("bpe-reset").onclick = function () { stopAll(); bpeReset(); };
+  document.getElementById("corpus").addEventListener("input", function () { stopAll(); bpeReset(); });
+  bpeReset();
 })();
 </script>

@@ -91,7 +91,7 @@ page sharing a little CSS/JS for the nav bar, theme, and analytics.
 | [`perceptron.html`](perceptron.html) | 🕸️ **The Perceptron** | A single neuron learns — watch it adjust its weights to separate two classes with a line, and hit the XOR limit that made us stack neurons into deep nets. |
 | [`diffusion.html`](diffusion.html) | 🎨 **Diffusion Models** | How AI images are made — generators start from pure noise and repeatedly denoise it into a picture; hit Generate to watch static resolve into an image. |
 
-Also: [`ai-ml-fundamentals.html`](ai-ml-fundamentals.html), an AI/ML Fundamentals slide deck that the homepage and nav don't link to.
+Also two slide decks that the homepage and nav don't link to: [`ai-ml-fundamentals.html`](ai-ml-fundamentals.html) (AI/ML Fundamentals) and [`llm-basics.html`](llm-basics.html) (a 10-minute talk on tokenization and next-token prediction).
 
 Each new topic is one HTML file plus one entry in [`assets/config.js`](assets/config.js).
 
