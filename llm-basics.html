@@ -271,6 +271,13 @@
   .cmp .bar .pct{ width:5ch; }
   .cmp .bar.us .fill{ background:var(--accent); }
   .cmp .bar:not(.us) .fill{ background:var(--muted); }
+  .demo-list{ list-style:none; display:flex; flex-direction:column; gap:clamp(.8rem,1.8vw,1.3rem); }
+  .demo-list li{ display:flex; gap:1rem; align-items:center; flex-wrap:wrap;
+    background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:clamp(.8rem,1.6vw,1.2rem) clamp(1rem,2vw,1.5rem); }
+  .demo-list .n{ font-family:var(--font-mono); font-weight:700; flex:none; width:2.2ch; }
+  .demo-list .what{ flex:1; min-width:16ch; font-size:clamp(.95rem,1.5vw,1.2rem); line-height:1.4; }
+  .demo-list .what small{ display:block; color:var(--muted); font-size:.78em; margin-top:.2rem; }
+  .demo-list .demo-cta{ padding:.55rem 1.1rem; }
   .cmp-cap{ font-family:var(--font-mono); font-size:clamp(.58rem,.8vw,.7rem); color:var(--muted); text-align:center; }
   .ladder{ margin-top:1rem; }
 
@@ -303,10 +310,10 @@
      SLIDE 1 — TITLE
      ============================================================ -->
 <section class="slide title-slide" id="s1">
-  <div class="topbar"><span></span><span>01 / 08</span></div>
+  <div class="topbar"><span></span><span>01 / 09</span></div>
   <div class="slide-content" style="justify-content:center;">
     <h1 class="reveal" data-editable>How an AI chatbot <span>reads and writes</span></h1>
-    <p class="sub reveal" data-editable>Two simple ideas behind every large language model — no math, just live demos.</p>
+    <p class="sub reveal" data-editable>Two simple ideas behind every large language model — no math, and a live demo at the end.</p>
     <div class="pill-row reveal">
       <span class="pill" data-editable>1 · Tokenization</span>
       <span class="pill" data-editable>2 · Next-Token Prediction</span>
@@ -319,7 +326,7 @@
      SLIDE 2 — HOOK
      ============================================================ -->
 <section class="slide" id="s2">
-  <div class="topbar"><span></span><span>02 / 08</span></div>
+  <div class="topbar"><span></span><span>02 / 09</span></div>
   <div class="slide-content">
     <div class="hook-wrap">
       <div class="eyebrow reveal" data-editable>A puzzle</div>
@@ -337,7 +344,7 @@
      SLIDE 3 — TOKENIZATION
      ============================================================ -->
 <section class="slide" id="s3">
-  <div class="topbar"><span></span><span>03 / 08</span></div>
+  <div class="topbar"><span></span><span>03 / 09</span></div>
   <div class="slide-content">
     <div class="topic-grid">
       <div class="topic-main">
@@ -348,7 +355,6 @@
           <li><span class="tag">Idea</span><span data-editable>Common words are <b>one chunk</b>. Rare words break into pieces.</span></li>
           <li><span class="tag">Think</span><span data-editable>Like reading a sentence made of <b>Lego bricks</b>, not individual letters.</span></li>
         </ul>
-        <a class="demo-cta reveal" href="https://learn.danhngo.ca/tokenization.html" target="_blank" rel="noopener">▶ Live demo <span class="url">/tokenization.html</span></a>
       </div>
       <div class="visual reveal" aria-hidden="true">
         <div class="vlabel">text → tokens</div>
@@ -368,7 +374,7 @@
      SLIDE 4 — WHERE CHUNKS COME FROM (BPE)
      ============================================================ -->
 <section class="slide" id="s4">
-  <div class="topbar"><span></span><span>04 / 08</span></div>
+  <div class="topbar"><span></span><span>04 / 09</span></div>
   <div class="slide-content">
     <div class="topic-grid">
       <div class="topic-main">
@@ -380,7 +386,6 @@
           <li><span class="tag">Repeat</span><span data-editable>"t" + "h" appear together a lot → glue into <b>"th"</b>. Then "th" + "e" → <b>"the"</b>.</span></li>
           <li><span class="tag">Stop</span><span data-editable>At ~100,000 chunks — the model's whole vocabulary. <b>Fewer pieces than English has words</b>, yet they snap together to spell any word, in any language.</span></li>
         </ul>
-        <a class="demo-cta reveal" href="https://learn.danhngo.ca/tokenization.html#bpe" target="_blank" rel="noopener">▶ Watch it glue <span class="url">/tokenization.html#bpe</span></a>
       </div>
       <div class="visual reveal" aria-hidden="true">
         <div class="vlabel">merging, step by step</div>
@@ -406,7 +411,7 @@
      SLIDE 5 — STRAWBERRY PAYOFF
      ============================================================ -->
 <section class="slide" id="s5">
-  <div class="topbar"><span></span><span>05 / 08</span></div>
+  <div class="topbar"><span></span><span>05 / 09</span></div>
   <div class="slide-content">
     <div class="topic-grid">
       <div class="topic-main">
@@ -439,7 +444,7 @@
      SLIDE 6 — NEXT-TOKEN PREDICTION
      ============================================================ -->
 <section class="slide" id="s6">
-  <div class="topbar"><span></span><span>06 / 08</span></div>
+  <div class="topbar"><span></span><span>06 / 09</span></div>
   <div class="slide-content">
     <div class="topic-grid">
       <div class="topic-main">
@@ -450,7 +455,6 @@
           <li><span class="tag">Idea</span><span data-editable>For every possible next chunk it gives a <b>chance</b>, then picks one.</span></li>
           <li><span class="tag">Note</span><span data-editable>No plan for the whole answer — every essay is built <b>chunk by chunk</b>.</span></li>
         </ul>
-        <a class="demo-cta reveal" href="https://learn.danhngo.ca/nexttoken.html" target="_blank" rel="noopener">▶ Live demo <span class="url">/nexttoken.html</span></a>
       </div>
       <div class="visual reveal" aria-hidden="true">
         <div class="vlabel">"The cat sat on the ___"</div>
@@ -469,7 +473,7 @@
      SLIDE 7 — TEMPERATURE
      ============================================================ -->
 <section class="slide" id="s7">
-  <div class="topbar"><span></span><span>07 / 08</span></div>
+  <div class="topbar"><span></span><span>07 / 09</span></div>
   <div class="slide-content">
     <div class="topic-grid">
       <div class="topic-main">
@@ -480,7 +484,6 @@
           <li><span class="tag">Low</span><span data-editable>Always the safest chunk — same answer every time.</span></li>
           <li><span class="tag">High</span><span data-editable>Unlikely chunks sneak in — creative, and sometimes <b>confidently wrong</b>. That's a "hallucination".</span></li>
         </ul>
-        <a class="demo-cta reveal" href="https://learn.danhngo.ca/nexttoken.html" target="_blank" rel="noopener">▶ Write 3 versions <span class="url">/nexttoken.html</span></a>
       </div>
       <div class="visual reveal" aria-hidden="true">
         <div class="vlabel">same start, 3 tries each</div>
@@ -504,10 +507,31 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 8 — CLOSING
+     SLIDE 8 — LIVE DEMO
      ============================================================ -->
 <section class="slide" id="s8">
-  <div class="topbar"><span></span><span>08 / 08</span></div>
+  <div class="topbar"><span></span><span>08 / 09</span></div>
+  <div class="slide-content">
+    <div class="obj-wrap">
+      <div class="eyebrow reveal" data-editable>Live demo</div>
+      <h2 class="reveal" data-editable>Let's try it</h2>
+      <ul class="demo-list reveal">
+        <li><span class="n">01</span><span class="what" data-editable>Chop text into tokens<small>Type someone's name, then press the Strawberry button</small></span>
+          <a class="demo-cta" href="https://learn.danhngo.ca/tokenization.html" target="_blank" rel="noopener">▶ Tokenization</a></li>
+        <li><span class="n">02</span><span class="what" data-editable>Watch the chunks get glued<small>Press Glue most common pair a few times</small></span>
+          <a class="demo-cta" href="https://learn.danhngo.ca/tokenization.html#bpe" target="_blank" rel="noopener">▶ Glue pairs</a></li>
+        <li><span class="n">03</span><span class="what" data-editable>Write the same sentence 3 times<small>Write 3 versions with temperature all the way down, then all the way up</small></span>
+          <a class="demo-cta" href="https://learn.danhngo.ca/nexttoken.html" target="_blank" rel="noopener">▶ Next token</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 9 — CLOSING
+     ============================================================ -->
+<section class="slide" id="s9">
+  <div class="topbar"><span></span><span>09 / 09</span></div>
   <div class="slide-content">
     <div class="close-wrap">
       <div class="eyebrow reveal" data-editable>The whole trick</div>
