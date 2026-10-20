@@ -265,6 +265,15 @@
   .ladder .chip{ min-width:2.2ch; text-align:center; }
   .ladder .why{ font-family:var(--font-mono); font-size:clamp(.62rem,.9vw,.76rem); color:var(--muted); }
 
+  /* --- visual: vocabulary size comparison --- */
+  .cmp{ display:flex; flex-direction:column; gap:.45rem; border-top:1px solid var(--line); padding-top:1rem; }
+  .cmp .bar .tok{ width:15ch; font-size:.85em; }
+  .cmp .bar .pct{ width:5ch; }
+  .cmp .bar.us .fill{ background:var(--accent); }
+  .cmp .bar:not(.us) .fill{ background:var(--muted); }
+  .cmp-cap{ font-family:var(--font-mono); font-size:clamp(.58rem,.8vw,.7rem); color:var(--muted); text-align:center; }
+  .ladder{ margin-top:1rem; }
+
   /* --- visual: strawberry letters vs tokens --- */
   .sb{ display:flex; flex-direction:column; gap:1rem; align-items:center; }
   .sb .lbl{ font-family:var(--font-mono); font-size:clamp(.62rem,.9vw,.76rem); color:var(--muted); letter-spacing:.08em; }
@@ -369,7 +378,7 @@
         <ul class="points reveal">
           <li><span class="tag">Start</span><span data-editable>Every letter is its own piece.</span></li>
           <li><span class="tag">Repeat</span><span data-editable>"t" + "h" appear together a lot → glue into <b>"th"</b>. Then "th" + "e" → <b>"the"</b>.</span></li>
-          <li><span class="tag">Stop</span><span data-editable>At ~100,000 chunks — the model's whole vocabulary.</span></li>
+          <li><span class="tag">Stop</span><span data-editable>At ~100,000 chunks — the model's whole vocabulary. <b>Fewer pieces than English has words</b>, yet they snap together to spell any word, in any language.</span></li>
         </ul>
         <a class="demo-cta reveal" href="https://learn.danhngo.ca/tokenization.html#bpe" target="_blank" rel="noopener">▶ Watch it glue <span class="url">/tokenization.html#bpe</span></a>
       </div>
@@ -381,6 +390,12 @@
           <div class="row"><span class="chip hot">th</span><span class="chip">e</span></div>
           <div class="why">"th"+"e" is next → glue</div>
           <div class="row"><span class="chip hot">the</span></div>
+        </div>
+        <div class="cmp">
+          <div class="bar"><span class="tok">words you know</span><span class="track"><span class="fill" style="width:18%"></span></span><span class="pct">~30k</span></div>
+          <div class="bar us"><span class="tok">model's chunks</span><span class="track"><span class="fill" style="width:58%"></span></span><span class="pct">~100k</span></div>
+          <div class="bar"><span class="tok">English words</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="pct">~170k</span></div>
+          <div class="cmp-cap">typical adult vocabulary · GPT-4's tokens · Oxford English Dictionary, words in current use</div>
         </div>
       </div>
     </div>
