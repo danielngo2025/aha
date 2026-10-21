@@ -151,6 +151,20 @@
     };
   }
 
+  // Pages are full width, so cap each canvas at ~70% of the window height (aspect kept) to keep it on screen.
+  function fitCanvases() {
+    var maxH = window.innerHeight * 0.7;
+    document.querySelectorAll("main.page canvas").forEach(function (c) {
+      if (!c.width || !c.height) return;
+      if (!("fit" in c.dataset)) c.dataset.fit = getComputedStyle(c).maxWidth === "none" ? "1" : "";
+      if (!c.dataset.fit) return;
+      c.style.maxWidth = Math.round(maxH * c.width / c.height) + "px";
+      c.style.marginLeft = c.style.marginRight = "auto";
+    });
+  }
+  window.addEventListener("load", function () { fitCanvases(); setTimeout(fitCanvases, 300); });
+  window.addEventListener("resize", fitCanvases);
+
   window.LAB = { fetchCount: fetchCount, renderCounts: renderCounts, path: realPath, basedir: basedir };
 
   buildNav();
