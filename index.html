@@ -42,7 +42,6 @@
         '<span class="emoji">' + t.emoji + '</span>' +
         '<h3>' + t.title + '</h3>' +
         '<p>' + t.blurb + '</p>' +
-        '<span class="grouptag">' + t.group + '</span>' +
       '</a>';
     }
     function renderGrid(q) {
@@ -50,7 +49,19 @@
       var list = SITE.topics.filter(function (t) {
         return !q || (t.title + " " + t.blurb + " " + (t.group || "")).toLowerCase().indexOf(q) >= 0;
       });
-      grid.innerHTML = list.length ? list.map(card).join("")
+      // sections follow the nav order: first appearance of each group in config
+      var groups = [], byGroup = {};
+      list.forEach(function (t) {
+        var g = t.group || "Other";
+        if (!byGroup[g]) { byGroup[g] = []; groups.push(g); }
+        byGroup[g].push(t);
+      });
+      grid.innerHTML = list.length ? groups.map(function (g) {
+        var n = byGroup[g].length;
+        return '<section class="group-sec"><div class="group-head"><h2>' + g + '</h2><span class="count">' +
+          n + (n === 1 ? " topic" : " topics") + '</span></div><div class="group-grid">' +
+          byGroup[g].map(card).join("") + '</div></section>';
+      }).join("")
         : '<p class="noresults">No topics match "<b>' + esc(q) + '</b>". Try another word — e.g. quantum, entropy, or AI.</p>';
     }
     document.getElementById("search").placeholder = "Search " + SITE.topics.length + " topics…  (e.g. quantum, entropy, AI)";
