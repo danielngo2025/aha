@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>✂️</text></svg>">
 <style>
-  textarea{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;color:var(--ink);
+  textarea{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;color:var(--ink);
     padding:12px 14px;font:inherit;font-size:16px;resize:vertical;min-height:70px}
   textarea:focus{outline:none;border-color:var(--accent)}
   .toks{display:flex;flex-wrap:wrap;gap:4px;margin-top:14px;min-height:40px}
@@ -18,7 +18,7 @@
   .metric .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
   .presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
   .presets button{font-size:12px;padding:6px 10px}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -129,7 +129,7 @@
     box.innerHTML = toks.map(function (t) {
       var disp = t.replace(/ /g, "␣").replace(/</g, "&lt;").replace(/>/g, "&gt;") || "␣";
       var h = hue(t);
-      return '<span class="tk" style="background:hsl(' + h + ',55%,22%);color:hsl(' + h + ',80%,80%)">' + disp + "</span>";
+      return '<span class="tk" style="background:hsl(' + h + ',70%,92%);color:hsl(' + h + ',60%,28%)">' + disp + "</span>";
     }).join("");
     document.getElementById("m-tok").textContent = toks.length;
     document.getElementById("m-chr").textContent = s.length;
@@ -180,7 +180,7 @@
     bpeRender("Step " + learned.length + ": <b>\"" + p.a + "\" + \"" + p.b + "\"</b> sit side by side " + p.n + "× — the most of any pair — so they become one token: <b>\"" + t + "\"</b>.");
     return true;
   }
-  function chip(t) { var h = hue(t); return '<span class="tk' + (t === fresh ? " fresh" : "") + '" style="background:hsl(' + h + ',55%,22%);color:hsl(' + h + ',80%,80%)">' + t + "</span>"; }
+  function chip(t) { var h = hue(t); return '<span class="tk' + (t === fresh ? " fresh" : "") + '" style="background:hsl(' + h + ',70%,92%);color:hsl(' + h + ',60%,28%)">' + t + "</span>"; }
   function bpeRender(msg) {
     document.getElementById("bpe-msg").innerHTML = msg;
     document.getElementById("bpe-words").innerHTML = bw.map(function (w) {

@@ -9,7 +9,7 @@
   canvas{width:100%;background:radial-gradient(circle at 30% 20%,#0e1c36,#070d18);border:1px solid var(--line);border-radius:12px;display:block}
   .formula{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center;
     font-size:24px;font-weight:800;margin-bottom:14px}
-  .formula .g{color:#6db4ff} .formula .m{color:#f4b942}
+  .formula .g{color:#1976d2} .formula .m{color:#ff8f00}
   .formula small{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-top:6px}
   .metrics{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
   .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px}
@@ -21,7 +21,7 @@
   .fld b{color:var(--ink);font-variant-numeric:tabular-nums}
   .presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
   .presets button{font-size:12px;padding:6px 10px}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -118,10 +118,10 @@
 
     x.clearRect(0, 0, W, H);
     // a = 1 (today's size) guide + now line
-    x.strokeStyle = "#28406a"; x.setLineDash([4, 4]); x.lineWidth = 1;
+    x.strokeStyle = "#bdbdbd"; x.setLineDash([4, 4]); x.lineWidth = 1;
     x.beginPath(); x.moveTo(PADL, Y(1)); x.lineTo(W - PADR, Y(1)); x.stroke();
     x.beginPath(); x.moveTo(X(0), PADT); x.lineTo(X(0), PADT + ph); x.stroke(); x.setLineDash([]);
-    x.fillStyle = "#93a4bf"; x.font = "11px system-ui"; x.textAlign = "left";
+    x.fillStyle = "#616161"; x.font = "11px system-ui"; x.textAlign = "left";
     x.fillText("today (size = 1)", PADL + 4, Y(1) - 5);
     x.textAlign = "center"; x.fillText("now", X(0), PADT + ph + 16);
     x.textAlign = "left"; x.fillText("← past", PADL + 2, PADT + ph + 16);
@@ -139,14 +139,14 @@
         var px = X(t), py = Y(a);
         if (!started) { x.moveTo(px, py); started = true; } else x.lineTo(px, py);
       }
-      x.strokeStyle = seg === 0 ? "rgba(147,164,191,.6)" : "#f4b942";
+      x.strokeStyle = seg === 0 ? "rgba(97,97,97,.6)" : "#ff8f00";
       x.lineWidth = seg === 0 ? 2 : 2.6; x.stroke();
     }
     // Big Bang marker + now dot
-    x.fillStyle = "#ff6b6b"; x.beginPath(); x.arc(X(tMin), Y(0), 4, 0, 7); x.fill();
-    x.fillStyle = "#93a4bf"; x.textAlign = "left"; x.fillText("Big Bang", X(tMin) + 6, Y(0) - 6);
+    x.fillStyle = "#d32f2f"; x.beginPath(); x.arc(X(tMin), Y(0), 4, 0, 7); x.fill();
+    x.fillStyle = "#616161"; x.textAlign = "left"; x.fillText("Big Bang", X(tMin) + 6, Y(0) - 6);
     x.fillStyle = "#fff"; x.beginPath(); x.arc(X(0), Y(1), 4.5, 0, 7); x.fill();
-    if (tr.crunch) { x.fillStyle = "#ff6b6b"; x.beginPath(); x.arc(X(tMax), Y(0), 4, 0, 7); x.fill();
+    if (tr.crunch) { x.fillStyle = "#d32f2f"; x.beginPath(); x.arc(X(tMax), Y(0), 4, 0, 7); x.fill();
       x.textAlign = "right"; x.fillText("Big Crunch", X(tMax) - 6, Y(0) - 6); }
 
     updateStats(Ok, tr);

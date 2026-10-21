@@ -6,13 +6,13 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🎲</text></svg>">
 <style>
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block}
   .metrics{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
   .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px}
   .metric .v{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
   .metric .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -116,7 +116,7 @@
   function render() {
     x.clearRect(0, 0, W, H);
     // box
-    x.strokeStyle = "#28406a"; x.lineWidth = 1; x.strokeRect(box.x0, box.y0, box.x1 - box.x0, box.y1 - box.y0);
+    x.strokeStyle = "#bdbdbd"; x.lineWidth = 1; x.strokeRect(box.x0, box.y0, box.x1 - box.x0, box.y1 - box.y0);
     for (var i = 0; i < ps.length; i++) {
       var p = ps[i]; x.fillStyle = speedColor(speed(p));
       x.beginPath(); x.arc(p.x, p.y, R, 0, 7); x.fill();
@@ -130,7 +130,7 @@
     var maxc = Math.max(6, Math.max.apply(null, counts));
     var pw = (hist.x1 - hist.x0) / hist.bins, ph = hist.y1 - hist.y0;
     // frame
-    x.strokeStyle = "#28406a"; x.lineWidth = 1;
+    x.strokeStyle = "#bdbdbd"; x.lineWidth = 1;
     x.beginPath(); x.moveTo(hist.x0, hist.y0); x.lineTo(hist.x0, hist.y1); x.lineTo(hist.x1, hist.y1); x.stroke();
     // bars colored by speed
     for (i = 0; i < hist.bins; i++) {
@@ -150,7 +150,7 @@
     }
     x.stroke();
     // labels
-    x.fillStyle = "#93a4bf"; x.font = "12px system-ui"; x.textAlign = "left";
+    x.fillStyle = "#616161"; x.font = "12px system-ui"; x.textAlign = "left";
     x.fillText("speed distribution", hist.x0, hist.y0 - 8);
     x.fillText("slow", hist.x0, hist.y1 + 16); x.textAlign = "right"; x.fillText("fast →", hist.x1, hist.y1 + 16);
     x.textAlign = "left"; x.fillStyle = "#fff"; x.fillText("— Maxwell–Boltzmann", hist.x0 + 92, hist.y0 - 8);

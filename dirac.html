@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🪞</text></svg>">
 <style>
-  canvas{width:100%;background:linear-gradient(180deg,#0b1428,#0a1220);border:1px solid var(--line);border-radius:12px;display:block}
+  canvas{width:100%;background:linear-gradient(180deg,#0b1428,#f5f5f5);border:1px solid var(--line);border-radius:12px;display:block}
   .formula{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;
     font-size:22px;font-weight:800;margin-bottom:14px}
   .formula small{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-top:4px}
@@ -19,7 +19,7 @@
   .solset{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
   .sol{display:flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:13px}
   .sol .dot{width:14px;height:14px;border-radius:50%}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -54,10 +54,10 @@
     </div>
     <div class="solset">
       <span class="muted" style="font-size:12px;align-self:center">The equation's four solutions:</span>
-      <div class="sol"><span class="dot" style="background:#6db4ff"></span>electron ↑</div>
-      <div class="sol"><span class="dot" style="background:#6db4ff"></span>electron ↓</div>
-      <div class="sol"><span class="dot" style="background:#f4b942"></span>positron ↑</div>
-      <div class="sol"><span class="dot" style="background:#f4b942"></span>positron ↓</div>
+      <div class="sol"><span class="dot" style="background:#1976d2"></span>electron ↑</div>
+      <div class="sol"><span class="dot" style="background:#1976d2"></span>electron ↓</div>
+      <div class="sol"><span class="dot" style="background:#ff8f00"></span>positron ↑</div>
+      <div class="sol"><span class="dot" style="background:#ff8f00"></span>positron ↓</div>
     </div>
     <div class="hintbox" id="hint"></div>
   </div>
@@ -119,16 +119,16 @@
   function render() {
     x.clearRect(0, 0, W, H);
     // region shading
-    x.fillStyle = "rgba(109,180,255,.05)"; x.fillRect(0, 0, W, posLine);
-    x.fillStyle = flash > 0 || weak > 0 ? "rgba(255,107,107,.10)" : "rgba(255,255,255,.02)"; x.fillRect(0, posLine, W, negLine - posLine);
-    x.fillStyle = "rgba(244,185,66,.05)"; x.fillRect(0, negLine, W, H - negLine);
+    x.fillStyle = "rgba(25,118,210,.05)"; x.fillRect(0, 0, W, posLine);
+    x.fillStyle = flash > 0 || weak > 0 ? "rgba(211,47,47,.10)" : "rgba(255,255,255,.02)"; x.fillRect(0, posLine, W, negLine - posLine);
+    x.fillStyle = "rgba(255,143,0,.05)"; x.fillRect(0, negLine, W, H - negLine);
     // energy lines + labels
-    x.strokeStyle = "#3a5686"; x.lineWidth = 1; x.setLineDash([5, 4]);
+    x.strokeStyle = "#9e9e9e"; x.lineWidth = 1; x.setLineDash([5, 4]);
     x.beginPath(); x.moveTo(0, posLine); x.lineTo(W, posLine); x.moveTo(0, negLine); x.lineTo(W, negLine); x.stroke(); x.setLineDash([]);
-    x.fillStyle = "#93a4bf"; x.font = "12px system-ui"; x.textAlign = "left";
+    x.fillStyle = "#616161"; x.font = "12px system-ui"; x.textAlign = "left";
     x.fillText("+mc²  (positive-energy electrons)", 8, posLine - 8);
     x.fillText("−mc²  (negative-energy sea, filled)", 8, negLine + 16);
-    x.textAlign = "right"; x.fillStyle = "#f4b942"; x.fillText("forbidden gap = 2mc²", W - 10, (posLine + negLine) / 2);
+    x.textAlign = "right"; x.fillStyle = "#ff8f00"; x.fillText("forbidden gap = 2mc²", W - 10, (posLine + negLine) / 2);
 
     // the Dirac sea (filled electrons)
     for (var r = 0; r < rows; r++) for (var col = 0; col < 15; col++) {
@@ -136,7 +136,7 @@
       if (cxp > W - 20) continue;
       var isHole = (r === 0 && col === holeCol) && (mode === "pair" || (mode === "rising" && prog > 0.12) || mode === "annihilating");
       if (isHole) continue;
-      x.fillStyle = "rgba(109,180,255,.45)"; x.beginPath(); x.arc(cxp, cyp, 4, 0, 7); x.fill();
+      x.fillStyle = "rgba(25,118,210,.45)"; x.beginPath(); x.arc(cxp, cyp, 4, 0, 7); x.fill();
     }
 
     // incoming photon (left), bright if energetic enough
@@ -145,17 +145,17 @@
       wavy(12, (posLine + negLine) / 2, holeX - 26, enough ? "#a66bff" : "rgba(166,107,255,.35)");
       x.fillStyle = enough ? "#a66bff" : "#6a5a8a"; x.font = "12px system-ui"; x.textAlign = "left";
       x.fillText("γ  " + Eg.toFixed(2) + " mc²", 12, (posLine + negLine) / 2 - 12);
-      if (weak > 0) { x.fillStyle = "#ff6b6b"; x.textAlign = "center"; x.fillText("✗ below 2mc² — no pair", holeX, (posLine + negLine) / 2 - 26); }
+      if (weak > 0) { x.fillStyle = "#d32f2f"; x.textAlign = "center"; x.fillText("✗ below 2mc² — no pair", holeX, (posLine + negLine) / 2 - 26); }
     }
 
     // the hole = positron
     if (mode === "pair" || mode === "annihilating" || (mode === "rising" && prog > 0.12))
-      drawParticle(holeX, topRowY, "#f4b942", "+", "down", mode === "pair" ? "positron e⁺" : "");
+      drawParticle(holeX, topRowY, "#ff8f00", "+", "down", mode === "pair" ? "positron e⁺" : "");
 
     // the electron
-    if (mode === "rising") { eY = topRowY + (posY() - topRowY) * prog; drawParticle(holeX, eY, "#6db4ff", "−", "up", ""); }
-    else if (mode === "pair") drawParticle(holeX, posY(), "#6db4ff", "−", "up", "electron e⁻");
-    else if (mode === "annihilating") { eY = posY() + (topRowY - posY()) * prog; drawParticle(holeX, eY, "#6db4ff", "−", "up", ""); }
+    if (mode === "rising") { eY = topRowY + (posY() - topRowY) * prog; drawParticle(holeX, eY, "#1976d2", "−", "up", ""); }
+    else if (mode === "pair") drawParticle(holeX, posY(), "#1976d2", "−", "up", "electron e⁻");
+    else if (mode === "annihilating") { eY = posY() + (topRowY - posY()) * prog; drawParticle(holeX, eY, "#1976d2", "−", "up", ""); }
 
     // annihilation flash + outgoing photons
     if (flash > 0) {

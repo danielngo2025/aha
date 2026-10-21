@@ -6,14 +6,14 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🚀</text></svg>">
 <style>
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block}
   .metrics{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
   .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px}
   .metric .v{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
   .metric .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
   .btnrow{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:12px}
   .field input[type=range]{width:240px}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -85,10 +85,10 @@
   function gamma() { return 1 / Math.sqrt(1 - beta * beta); }
 
   function drawClock(cxpos, topY, botY, mw, label, photon) {
-    x.strokeStyle = "#3a5686"; x.lineWidth = 4; x.lineCap = "round";
+    x.strokeStyle = "#9e9e9e"; x.lineWidth = 4; x.lineCap = "round";
     x.beginPath(); x.moveTo(cxpos - mw, topY); x.lineTo(cxpos + mw, topY);
     x.moveTo(cxpos - mw, botY); x.lineTo(cxpos + mw, botY); x.stroke();
-    x.fillStyle = "#93a4bf"; x.font = "12px system-ui"; x.textAlign = "left";
+    x.fillStyle = "#616161"; x.font = "12px system-ui"; x.textAlign = "left";
     x.fillText(label, cxpos - mw, topY - 10);
   }
 
@@ -113,19 +113,19 @@
     x.clearRect(0, 0, W, H);
     // rest clock
     drawClock(lane1.mx, lane1.top, lane1.bot, 34, "At rest (v = 0)", null);
-    x.fillStyle = "#6db4ff"; x.beginPath(); x.arc(lane1.mx, restY, 5, 0, 7); x.fill();
+    x.fillStyle = "#1976d2"; x.beginPath(); x.arc(lane1.mx, restY, 5, 0, 7); x.fill();
 
     // moving clock: diagonal trail + drifting mirrors
-    x.strokeStyle = "rgba(244,185,66,.5)"; x.lineWidth = 1.5; x.beginPath();
+    x.strokeStyle = "rgba(255,143,0,.5)"; x.lineWidth = 1.5; x.beginPath();
     for (var i = 0; i < trail.length; i++) { var p = trail[i]; if (i === 0) x.moveTo(p[0], p[1]); else x.lineTo(p[0], p[1]); }
     x.stroke();
     drawClock(moveX, lane2.top, lane2.bot, 34, "Moving at v →", null);
-    x.fillStyle = "#f4b942"; x.beginPath(); x.arc(moveX, moveY, 5, 0, 7); x.fill();
+    x.fillStyle = "#ff8f00"; x.beginPath(); x.arc(moveX, moveY, 5, 0, 7); x.fill();
     // motion arrow
-    x.strokeStyle = "#f4b942"; x.lineWidth = 2; x.beginPath();
+    x.strokeStyle = "#ff8f00"; x.lineWidth = 2; x.beginPath();
     x.moveTo(moveX + 44, (lane2.top + lane2.bot) / 2); x.lineTo(moveX + 74, (lane2.top + lane2.bot) / 2); x.stroke();
     x.beginPath(); x.moveTo(moveX + 74, (lane2.top + lane2.bot) / 2); x.lineTo(moveX + 66, (lane2.top + lane2.bot) / 2 - 5);
-    x.lineTo(moveX + 66, (lane2.top + lane2.bot) / 2 + 5); x.closePath(); x.fillStyle = "#f4b942"; x.fill();
+    x.lineTo(moveX + 66, (lane2.top + lane2.bot) / 2 + 5); x.closePath(); x.fillStyle = "#ff8f00"; x.fill();
   }
 
   var frame = 0;

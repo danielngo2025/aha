@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🛷</text></svg>">
 <style>
-  canvas{width:100%;background:linear-gradient(180deg,#0c1830,#0a1220);border:1px solid var(--line);border-radius:12px;display:block}
+  canvas{width:100%;background:linear-gradient(180deg,#e3f2fd,#f5f5f5);border:1px solid var(--line);border-radius:12px;display:block}
   .formula{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center;
     font-size:26px;font-weight:800;letter-spacing:.5px;margin-bottom:14px}
   .formula small{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-top:4px;letter-spacing:0}
@@ -19,7 +19,7 @@
   .fld input[type=range]{width:100%;accent-color:var(--accent)}
   .fld b{color:var(--ink);font-variant-numeric:tabular-nums}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -116,20 +116,20 @@
   function render() {
     x.clearRect(0, 0, W, H);
     // ice + surface sheen
-    x.strokeStyle = "#22406e"; x.lineWidth = 2; x.beginPath(); x.moveTo(0, groundY); x.lineTo(W, groundY); x.stroke();
-    for (var gx = 0; gx < W; gx += 40) { x.strokeStyle = "rgba(120,170,230,.08)"; x.lineWidth = 1; x.beginPath(); x.moveTo(gx, groundY); x.lineTo(gx - 16, H); x.stroke(); }
+    x.strokeStyle = "#9e9e9e"; x.lineWidth = 2; x.beginPath(); x.moveTo(0, groundY); x.lineTo(W, groundY); x.stroke();
+    for (var gx = 0; gx < W; gx += 40) { x.strokeStyle = "rgba(0,0,0,.08)"; x.lineWidth = 1; x.beginPath(); x.moveTo(gx, groundY); x.lineTo(gx - 16, H); x.stroke(); }
     var bw = blockW(), bh = bw * 0.7, bx = pos, by = groundY - bh;
     // block
-    x.fillStyle = "#1d2f4d"; x.strokeStyle = "#6db4ff"; x.lineWidth = 2;
+    x.fillStyle = "#f5f5f5"; x.strokeStyle = "#1976d2"; x.lineWidth = 2;
     x.fillRect(bx, by, bw, bh); x.strokeRect(bx, by, bw, bh);
-    x.fillStyle = "#9cc4ff"; x.font = "bold 13px system-ui"; x.textAlign = "center";
+    x.fillStyle = "#1565c0"; x.font = "bold 13px system-ui"; x.textAlign = "center";
     x.fillText(m + " kg", bx + bw / 2, by + bh / 2 + 4);
     // velocity arrow (blue, above block)
-    arrow(bx + bw / 2, by - 22, v * 10, "#6db4ff", v ? "v" : "");
+    arrow(bx + bw / 2, by - 22, v * 10, "#1976d2", v ? "v" : "");
     // applied force arrow (amber, at block mid-height, from the left face)
-    if (pushing && F > 0) arrow(bx + bw, by + bh / 2, F * 1.6, "#f4b942", "F");
+    if (pushing && F > 0) arrow(bx + bw, by + bh / 2, F * 1.6, "#ff8f00", "F");
     // friction arrow (red, opposing motion, near the ground)
-    if (Ff > 0 && Math.abs(v) > 1e-4) arrow(bx + bw / 2, groundY + 16, -Math.sign(v) * Ff * 1.6, "#ff6b6b", "friction");
+    if (Ff > 0 && Math.abs(v) > 1e-4) arrow(bx + bw / 2, groundY + 16, -Math.sign(v) * Ff * 1.6, "#d32f2f", "friction");
   }
 
   var frame = 0;

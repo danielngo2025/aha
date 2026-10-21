@@ -6,12 +6,12 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🎯</text></svg>">
 <style>
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block}
   .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--muted)}
   .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
   .posbar-wrap{margin-top:14px}
   .posbar-wrap .cap{font-size:12px;color:var(--muted);margin-bottom:5px}
-  .posbar{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line);font-size:13px;font-weight:800;color:#0b1220}
+  .posbar{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line);font-size:13px;font-weight:800;color:#f5f5f5}
   .posbar span{display:flex;align-items:center;justify-content:center;white-space:nowrap;transition:width .12s}
   .eq{font-size:13px;color:var(--muted);margin-top:12px;font-variant-numeric:tabular-nums;line-height:1.7}
   .eq b{color:var(--ink)}
@@ -25,7 +25,7 @@
   .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:130px}
   .metric .v{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
   .metric .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -44,15 +44,15 @@
   <div class="card">
     <canvas id="grid" width="720" height="300"></canvas>
     <div class="legend">
-      <span><i style="background:#ff6b6b"></i>Sick &amp; tested + (true positive)</span>
-      <span><i style="background:#f4b942"></i>Healthy &amp; tested + (false positive)</span>
+      <span><i style="background:#d32f2f"></i>Sick &amp; tested + (true positive)</span>
+      <span><i style="background:#ff8f00"></i>Healthy &amp; tested + (false positive)</span>
       <span><i style="background:#7a2e2e"></i>Sick &amp; tested − (missed)</span>
-      <span><i style="background:#2b3f63"></i>Healthy &amp; tested − (correct)</span>
+      <span><i style="background:#e0e0e0"></i>Healthy &amp; tested − (correct)</span>
     </div>
 
     <div class="posbar-wrap">
       <div class="cap">Of everyone who tests positive, what fraction is actually sick?</div>
-      <div class="posbar"><span id="seg-tp" style="background:#ff6b6b">sick</span><span id="seg-fp" style="background:#f4b942">false alarm</span></div>
+      <div class="posbar"><span id="seg-tp" style="background:#d32f2f">sick</span><span id="seg-fp" style="background:#ff8f00">false alarm</span></div>
     </div>
     <div class="eq" id="eq"></div>
 
@@ -117,7 +117,7 @@
     var mx = 6, my = 6, cw = (W - 2 * mx) / COLS, ch = (H - 2 * my) / ROWS, pad = 2;
     for (var idx = 0; idx < N; idx++) {
       var col = idx % COLS, row = Math.floor(idx / COLS);
-      x.fillStyle = idx < TP ? "#ff6b6b" : idx < TP + FP ? "#f4b942" : idx < TP + FP + FN ? "#7a2e2e" : "#2b3f63";
+      x.fillStyle = idx < TP ? "#d32f2f" : idx < TP + FP ? "#ff8f00" : idx < TP + FP + FN ? "#7a2e2e" : "#e0e0e0";
       x.fillRect(mx + col * cw + pad / 2, my + row * ch + pad / 2, cw - pad, ch - pad);
     }
 

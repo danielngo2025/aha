@@ -6,10 +6,10 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🔌</text></svg>">
 <style>
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block}
   .toggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:12px}
   .toggle button{border:0;border-radius:0;background:var(--panel2);padding:8px 18px;font-weight:700}
-  .toggle button.on{background:var(--accent);color:#241a00}
+  .toggle button.on{background:var(--accent);color:var(--accent-ink)}
   .metrics{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
   .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px}
   .metric .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
@@ -19,7 +19,7 @@
   .fld input[type=range]{width:100%;accent-color:var(--accent)}
   .fld input:disabled{opacity:.4}
   .fld b{color:var(--ink);font-variant-numeric:tabular-nums}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -97,30 +97,30 @@
 
     // power plant
     x.fillStyle = "#3a4759"; x.fillRect(20, 90, 60, 70);
-    x.fillStyle = "#93a4bf"; x.font = "11px system-ui"; x.textAlign = "center"; x.fillText("power", 50, 175); x.fillText("plant", 50, 188);
-    x.fillStyle = "#f4b942"; x.fillText("⚡", 50, 130);
+    x.fillStyle = "#616161"; x.font = "11px system-ui"; x.textAlign = "center"; x.fillText("power", 50, 175); x.fillText("plant", 50, 188);
+    x.fillStyle = "#ff8f00"; x.fillText("⚡", 50, 130);
 
     // transmission line — colour by loss (green efficient → red hot)
     var hot = 1 - eff, col = "rgb(" + (60 + 195 * hot | 0) + "," + (206 - 160 * hot | 0) + "," + (110 - 90 * hot | 0) + ")";
     x.strokeStyle = col; x.lineWidth = 3 + 4 * hot;
     x.beginPath(); x.moveTo(plantX + 10, lineY); x.lineTo(cityX - 10, lineY); x.stroke();
     // heat shimmer if lossy
-    if (hot > 0.3) { x.fillStyle = "rgba(255,107,107," + (hot * 0.5).toFixed(2) + ")"; x.font = "12px system-ui"; x.fillText("🔥 overheating — power wasted as heat", (plantX + cityX) / 2, lineY - 12); }
+    if (hot > 0.3) { x.fillStyle = "rgba(211,47,47," + (hot * 0.5).toFixed(2) + ")"; x.font = "12px system-ui"; x.fillText("🔥 overheating — power wasted as heat", (plantX + cityX) / 2, lineY - 12); }
     // flowing energy dots (speed/brightness ∝ delivered)
     flow = (flow + 0.6 + eff) % 40;
     for (var d = -40; d < cityX - plantX; d += 40) {
       var dx = plantX + 10 + d + flow;
-      if (dx > plantX + 10 && dx < cityX - 10) { x.fillStyle = "rgba(244,185,66," + (0.25 + 0.75 * eff).toFixed(2) + ")"; x.beginPath(); x.arc(dx, lineY, 3, 0, 7); x.fill(); }
+      if (dx > plantX + 10 && dx < cityX - 10) { x.fillStyle = "rgba(255,143,0," + (0.25 + 0.75 * eff).toFixed(2) + ")"; x.beginPath(); x.arc(dx, lineY, 3, 0, 7); x.fill(); }
     }
 
     // transformers (AC only)
     if (mode === "ac") {
       [[plantX + 26, "▲"], [cityX - 26, "▼"]].forEach(function (tp) {
-        x.fillStyle = "#1d2f4d"; x.strokeStyle = "#6db4ff"; x.lineWidth = 1.5;
+        x.fillStyle = "#f5f5f5"; x.strokeStyle = "#1976d2"; x.lineWidth = 1.5;
         x.fillRect(tp[0] - 12, lineY - 16, 24, 32); x.strokeRect(tp[0] - 12, lineY - 16, 24, 32);
-        x.fillStyle = "#6db4ff"; x.font = "12px system-ui"; x.textAlign = "center"; x.fillText(tp[1], tp[0], lineY + 4);
+        x.fillStyle = "#1976d2"; x.font = "12px system-ui"; x.textAlign = "center"; x.fillText(tp[1], tp[0], lineY + 4);
       });
-      x.fillStyle = "#6db4ff"; x.font = "10px system-ui"; x.fillText("step-up", plantX + 26, lineY - 22); x.fillText("step-down", cityX - 26, lineY - 22);
+      x.fillStyle = "#1976d2"; x.font = "10px system-ui"; x.fillText("step-up", plantX + 26, lineY - 22); x.fillText("step-down", cityX - 26, lineY - 22);
     }
 
     // city — brightness ∝ delivered power
@@ -130,10 +130,10 @@
       x.fillRect(cityX + 6 + b * 13, 96 + fl * 16, 9, 11);
     }
     x.strokeStyle = "#3a4759"; x.strokeRect(cityX + 4, 90, 68, 70);
-    x.fillStyle = "#93a4bf"; x.textAlign = "center"; x.font = "11px system-ui"; x.fillText("city", cityX + 38, 175);
+    x.fillStyle = "#616161"; x.textAlign = "center"; x.font = "11px system-ui"; x.fillText("city", cityX + 38, 175);
 
     // distance label
-    x.fillStyle = "#5b7099"; x.fillText(dist + " km of line", (plantX + cityX) / 2, lineY + 34);
+    x.fillStyle = "#757575"; x.fillText(dist + " km of line", (plantX + cityX) / 2, lineY + 34);
 
     updateStats(r);
   }

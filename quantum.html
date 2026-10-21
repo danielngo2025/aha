@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🌀</text></svg>">
 <style>
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block}
   .metrics{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
   .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:110px}
   .metric .v{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
@@ -16,7 +16,7 @@
     border-radius:8px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer;user-select:none}
   .toggle input{accent-color:var(--bad);width:16px;height:16px}
   .toggle.on{border-color:var(--bad);color:#ffd5d5}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -123,9 +123,9 @@
 
   function drawApparatus() {
     // source
-    x.fillStyle = "#3fce8f";
+    x.fillStyle = "#2e7d32";
     x.beginPath(); x.arc(srcX, cy, 7, 0, 7); x.fill();
-    x.fillStyle = "#0a1220"; x.beginPath(); x.arc(srcX, cy, 3, 0, 7); x.fill();
+    x.fillStyle = "#f5f5f5"; x.beginPath(); x.arc(srcX, cy, 3, 0, 7); x.fill();
     // barrier with two slits
     var off = slitOffset();
     var glow = flash && flash.life > 0 && detector;
@@ -139,20 +139,20 @@
     // highlight the used slit when the detector is watching
     if (glow) {
       var gy = cy + (flash.top ? -off : off);
-      x.fillStyle = "rgba(255,107,107,.55)";
+      x.fillStyle = "rgba(211,47,47,.55)";
       x.fillRect(barX - 3, gy - slitH / 2, 18, slitH);
     }
     // detection screen frame
-    x.strokeStyle = "#1d2f4d"; x.lineWidth = 1;
+    x.strokeStyle = "#f5f5f5"; x.lineWidth = 1;
     x.strokeRect(bandL - 2, 6, (bandR - bandL) + 4, H - 12);
     // theoretical intensity profile (faint reference curve on the right)
-    x.strokeStyle = "rgba(147,164,191,.6)"; x.lineWidth = 2; x.beginPath();
+    x.strokeStyle = "rgba(97,97,97,.6)"; x.lineWidth = 2; x.beginPath();
     for (var yy = 8; yy <= H - 8; yy += 2) {
       var px = profX + intensity(yy - cy) * 66;
       if (yy === 8) x.moveTo(px, yy); else x.lineTo(px, yy);
     }
     x.stroke();
-    x.fillStyle = "#93a4bf"; x.font = "11px system-ui"; x.textAlign = "left";
+    x.fillStyle = "#616161"; x.font = "11px system-ui"; x.textAlign = "left";
     x.fillText("predicted", profX - 2, H - 4);
   }
 
@@ -160,7 +160,7 @@
     x.clearRect(0, 0, W, H);
     drawApparatus();
     // accumulated dots
-    x.fillStyle = detector ? "rgba(244,185,66,.9)" : "rgba(109,180,255,.9)";
+    x.fillStyle = detector ? "rgba(255,143,0,.9)" : "rgba(25,118,210,.9)";
     for (var i = 0; i < dots.length; i++) {
       x.beginPath(); x.arc(dots[i].x, dots[i].y, 1.6, 0, 7); x.fill();
     }
@@ -171,7 +171,7 @@
       x.beginPath();
       x.moveTo(srcX, cy); x.lineTo(barX + 6, flash.sy); x.lineTo(flash.dx, flash.y);
       x.stroke();
-      x.fillStyle = "#e8eef7";
+      x.fillStyle = "#212121";
       x.beginPath(); x.arc(flash.dx, flash.y, 2.6, 0, 7); x.fill();
       flash.life -= 0.06;
     }

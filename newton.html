@@ -8,7 +8,7 @@
 <style>
   .formula{font-size:22px;text-align:center;margin:6px 0 14px;letter-spacing:.5px}
   .formula sub{font-size:.6em}
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block;touch-action:none}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block;touch-action:none}
   .two{display:grid;gap:16px}
   .cap{color:var(--muted);font-size:13px;margin:8px 0 0}
   .status{font-weight:800;margin-left:8px}
@@ -96,14 +96,14 @@
     var x1 = pad, x2 = pad + (r / 20) * span;
     // force arrow (thickness ~ F, capped)
     var lw = Math.max(1.5, Math.min(26, F * 3.5));
-    x.strokeStyle = "#f4b942"; x.lineWidth = lw; x.globalAlpha = .85;
+    x.strokeStyle = "#ff8f00"; x.lineWidth = lw; x.globalAlpha = .85;
     line(x1, cy, x2, cy); arrow(x2, cy, -1, lw); arrow(x1, cy, 1, lw);
     x.globalAlpha = 1;
     // bodies
-    body(x1, cy, r1, "#6db4ff", "m₁");
+    body(x1, cy, r1, "#1976d2", "m₁");
     body(x2, cy, r2, "#ff8a5c", "m₂");
     // r label
-    x.fillStyle = "#93a4bf"; x.font = "12px system-ui"; x.textAlign = "center";
+    x.fillStyle = "#616161"; x.font = "12px system-ui"; x.textAlign = "center";
     x.fillText("r = " + r, (x1 + x2) / 2, cy - Math.max(r1, r2) - 12);
 
     if (baseF === null && r === 8) baseF = F;
@@ -118,9 +118,9 @@
     }
     function body(bx, by, br, col, label) {
       var g = x.createRadialGradient(bx - br / 3, by - br / 3, br / 6, bx, by, br);
-      g.addColorStop(0, "#fff"); g.addColorStop(.25, col); g.addColorStop(1, "#0a1220");
+      g.addColorStop(0, "#fff"); g.addColorStop(.25, col); g.addColorStop(1, "#f5f5f5");
       x.fillStyle = g; x.beginPath(); x.arc(bx, by, br, 0, 7); x.fill();
-      x.fillStyle = "#e8eef7"; x.font = "bold 13px system-ui"; x.textAlign = "center";
+      x.fillStyle = "#212121"; x.font = "bold 13px system-ui"; x.textAlign = "center";
       x.fillText(label, bx, by + br + 16);
     }
   }
@@ -172,7 +172,7 @@
     x.clearRect(0, 0, W, H);
     // trail
     for (var i = 1; i < trail.length; i++) {
-      x.strokeStyle = "rgba(244,185,66," + (i / trail.length * .8) + ")";
+      x.strokeStyle = "rgba(255,143,0," + (i / trail.length * .8) + ")";
       x.lineWidth = 2; x.beginPath();
       x.moveTo(trail[i - 1].x, trail[i - 1].y); x.lineTo(trail[i].x, trail[i].y); x.stroke();
     }
@@ -184,7 +184,7 @@
     // planet
     if (p) {
       var pg = x.createRadialGradient(p.x - pr / 3, p.y - pr / 3, 1, p.x, p.y, pr);
-      pg.addColorStop(0, "#cfe6ff"); pg.addColorStop(.4, "#6db4ff"); pg.addColorStop(1, "#123");
+      pg.addColorStop(0, "#cfe6ff"); pg.addColorStop(.4, "#1976d2"); pg.addColorStop(1, "#123");
       x.fillStyle = pg; x.beginPath(); x.arc(p.x, p.y, pr, 0, 7); x.fill();
     }
   }

@@ -6,8 +6,8 @@
 <link rel="stylesheet" href="assets/site.css">
 <style>
   :root{
-    --bg:#0e1726; --panel:#16233a; --panel2:#1d2f4d; --ink:#e8eef7; --muted:#93a4bf;
-    --line:#2b3f63; --accent:#f4b942; --good:#3fce8f; --bad:#ff6b6b; --sea:#12386b;
+    --bg:#fafafa; --panel:#ffffff; --panel2:#f5f5f5; --ink:#212121; --muted:#616161;
+    --line:#e0e0e0; --accent:#ff8f00; --good:#2e7d32; --bad:#d32f2f; --sea:#12386b;
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%}
@@ -26,7 +26,7 @@
   button{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;font-size:13px}
   button:hover:not(:disabled){border-color:var(--accent)}
   button:disabled{opacity:.4;cursor:not-allowed}
-  button.primary{background:var(--accent);color:#241a00;border-color:var(--accent)}
+  button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
   button.ghost{background:transparent}
   .btnrow{display:flex;flex-wrap:wrap;gap:8px}
   .players{display:flex;flex-direction:column;gap:6px}
@@ -45,7 +45,7 @@
   .costicons{letter-spacing:2px;font-size:15px}
   .costmiss{filter:grayscale(1);opacity:.4}
   .bcost{font-size:11px;letter-spacing:1px;margin-left:5px}
-  .hint{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent)}
+  .hint{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent)}
   .hint ol{margin:6px 0 0;padding-left:20px}
   .hint li{margin:4px 0}
   .tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:20px;background:var(--panel2);border:1px solid var(--line);color:var(--muted);margin-left:6px}
@@ -173,9 +173,9 @@ const COST={
 const RES=["wood","brick","sheep","wheat","ore"];
 const PLAYER_DEFS=[
   {name:"You",  color:"#4aa3ff", human:true},
-  {name:"Rex",  color:"#ff6b6b", human:false},
-  {name:"Mira", color:"#3fce8f", human:false},
-  {name:"Otto", color:"#f4b942", human:false},
+  {name:"Rex",  color:"#d32f2f", human:false},
+  {name:"Mira", color:"#2e7d32", human:false},
+  {name:"Otto", color:"#ff8f00", human:false},
 ];
 
 // ---- strategy profiles (drive AI setup scoring + build priority) -----------
@@ -1101,7 +1101,7 @@ function drawResourceArt(svg,h){
   const x=h.cx, y=h.cy-15;
   const g=el("g",{});
   // backing plate
-  g.appendChild(el("circle",{cx:x,cy:y,r:17,fill:"#fbf6e9",opacity:.9,stroke:"#0b2545","stroke-width":1}));
+  g.appendChild(el("circle",{cx:x,cy:y,r:17,fill:"#fbf6e9",opacity:.9,stroke:"#e3f2fd","stroke-width":1}));
   const O="#3a2f22"; // common dark outline
   if(h.resource==="wood"){
     g.appendChild(el("rect",{x:x-2,y:y+3,width:4,height:9,fill:"#7a4a1e",stroke:O,"stroke-width":1}));
@@ -1170,7 +1170,7 @@ function drawBoard(){
     const pts=[];for(let i=0;i<6;i++){const a=Math.PI/180*(60*i-90);pts.push(`${h.cx+SIZE*Math.cos(a)},${h.cy+SIZE*Math.sin(a)}`);}
     poly.setAttribute("points",pts.join(" "));
     poly.setAttribute("fill",RES_COLOR[h.resource]);
-    poly.setAttribute("stroke",legalH.has(hi)?"#fff":"#0b2545");
+    poly.setAttribute("stroke",legalH.has(hi)?"#fff":"#e3f2fd");
     poly.setAttribute("stroke-width",legalH.has(hi)?3:2);
     if(legalH.has(hi)){poly.style.cursor="pointer";poly.style.opacity=.85;poly.onclick=()=>onHexClick(hi);}
     svg.appendChild(poly);
@@ -1180,13 +1180,13 @@ function drawBoard(){
     if(h.number!=null){
       const c=document.createElementNS(SVGNS,"circle");
       c.setAttribute("cx",h.cx);c.setAttribute("cy",h.cy+16);c.setAttribute("r",14);
-      c.setAttribute("fill","#f3ead3");c.setAttribute("stroke","#0b2545");c.setAttribute("stroke-width",1);
+      c.setAttribute("fill","#f3ead3");c.setAttribute("stroke","#e3f2fd");c.setAttribute("stroke-width",1);
       svg.appendChild(c);
       const t=document.createElementNS(SVGNS,"text");
       t.setAttribute("x",h.cx);t.setAttribute("y",h.cy+15);t.setAttribute("text-anchor","middle");
       t.setAttribute("dominant-baseline","middle");
       t.setAttribute("font-weight","800");t.setAttribute("font-size","14");
-      t.setAttribute("fill",(h.number===6||h.number===8)?"#b5533b":"#0b2545");
+      t.setAttribute("fill",(h.number===6||h.number===8)?"#b5533b":"#e3f2fd");
       t.textContent=h.number;svg.appendChild(t);
       // pips
       const dots=PIPS[h.number];const dt=document.createElementNS(SVGNS,"text");
@@ -1212,12 +1212,12 @@ function drawBoard(){
     const t=document.createElementNS(SVGNS,"text");
     t.setAttribute("x",px);t.setAttribute("y",py);t.setAttribute("text-anchor","middle");
     t.setAttribute("dominant-baseline","middle");t.setAttribute("font-size","12");t.setAttribute("font-weight","700");
-    t.setAttribute("fill","#cfe3ff");
+    t.setAttribute("fill","#1565c0");
     t.textContent=e.port==="3:1"?"3:1":RES_ICON[e.port]+"2:1";
     svg.appendChild(t);
     const l=document.createElementNS(SVGNS,"line");
     l.setAttribute("x1",v1.x);l.setAttribute("y1",v1.y);l.setAttribute("x2",v2.x);l.setAttribute("y2",v2.y);
-    l.setAttribute("stroke","#cfe3ff");l.setAttribute("stroke-width",1.5);l.setAttribute("stroke-dasharray","2 3");
+    l.setAttribute("stroke","#1565c0");l.setAttribute("stroke-width",1.5);l.setAttribute("stroke-dasharray","2 3");
     svg.appendChild(l);
   });
 
@@ -1246,13 +1246,13 @@ function drawBoard(){
       if(b.type==="settlement"){
         const c=document.createElementNS(SVGNS,"circle");
         c.setAttribute("cx",v.x);c.setAttribute("cy",v.y);c.setAttribute("r",9);
-        c.setAttribute("fill",G.players[b.player].color);c.setAttribute("stroke","#0b2545");c.setAttribute("stroke-width",2);
+        c.setAttribute("fill",G.players[b.player].color);c.setAttribute("stroke","#e3f2fd");c.setAttribute("stroke-width",2);
         if(G.mode==="build-city"&&b.player===cur().id){c.style.cursor="pointer";c.setAttribute("stroke","#fff");c.onclick=()=>onVertexClick(v.id);}
         svg.appendChild(c);
       }else{
         const r=document.createElementNS(SVGNS,"rect");
         r.setAttribute("x",v.x-9);r.setAttribute("y",v.y-9);r.setAttribute("width",18);r.setAttribute("height",18);r.setAttribute("rx",3);
-        r.setAttribute("fill",G.players[b.player].color);r.setAttribute("stroke","#0b2545");r.setAttribute("stroke-width",2);
+        r.setAttribute("fill",G.players[b.player].color);r.setAttribute("stroke","#e3f2fd");r.setAttribute("stroke-width",2);
         svg.appendChild(r);
         const star=document.createElementNS(SVGNS,"text");star.setAttribute("x",v.x);star.setAttribute("y",v.y+1);
         star.setAttribute("text-anchor","middle");star.setAttribute("dominant-baseline","middle");star.setAttribute("font-size","10");star.textContent="★";
@@ -1261,7 +1261,7 @@ function drawBoard(){
     }else if(legalV.has(v.id)){
       const c=document.createElementNS(SVGNS,"circle");
       c.setAttribute("cx",v.x);c.setAttribute("cy",v.y);c.setAttribute("r",topPick.has(v.id)?9:6);
-      c.setAttribute("fill",topPick.has(v.id)?"#f4b942":"#ffffff");
+      c.setAttribute("fill",topPick.has(v.id)?"#ff8f00":"#ffffff");
       c.setAttribute("fill-opacity",topPick.has(v.id)?1:.65);
       c.setAttribute("stroke",topPick.has(v.id)?"#fff":"#9fb6d9");c.setAttribute("stroke-width",2);
       c.style.cursor="pointer";c.onclick=()=>onVertexClick(v.id);

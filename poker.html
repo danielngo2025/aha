@@ -6,8 +6,8 @@
 <link rel="stylesheet" href="assets/site.css">
 <style>
   :root{
-    --bg:#0e1726; --panel:#16233a; --panel2:#1d2f4d; --ink:#e8eef7; --muted:#93a4bf;
-    --line:#2b3f63; --accent:#f4b942; --good:#3fce8f; --bad:#ff6b6b; --felt:#0f5132;
+    --bg:#fafafa; --panel:#ffffff; --panel2:#f5f5f5; --ink:#212121; --muted:#616161;
+    --line:#e0e0e0; --accent:#ff8f00; --good:#2e7d32; --bad:#d32f2f; --felt:#0f5132;
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%}
@@ -24,7 +24,7 @@
   button{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;font-size:13px}
   button:hover:not(:disabled){border-color:var(--accent)}
   button:disabled{opacity:.35;cursor:not-allowed}
-  button.primary{background:var(--accent);color:#241a00;border-color:var(--accent)}
+  button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
   button.good{background:var(--good);color:#062012;border-color:var(--good)}
   button.bad{background:var(--bad);color:#2a0606;border-color:var(--bad)}
   button.ghost{background:transparent}
@@ -37,7 +37,7 @@
   .pcard{width:52px;height:72px;border-radius:8px;background:#fbfbfd;color:#111;display:flex;flex-direction:column;justify-content:space-between;padding:5px 6px;font-weight:800;box-shadow:0 2px 6px #0005;font-size:17px}
   .pcard.red{color:#c8102e}
   .pcard .bot{align-self:flex-end;transform:rotate(180deg)}
-  .pcard.back{background:repeating-linear-gradient(45deg,#20406e,#20406e 6px,#1a3358 6px,#1a3358 12px);border:2px solid #2b3f63}
+  .pcard.back{background:repeating-linear-gradient(45deg,#bbdefb,#bbdefb 6px,#e3f2fd 6px,#e3f2fd 12px);border:2px solid #e0e0e0}
   .pcard.dim{opacity:.28}
   .handname{font-size:12px;color:#eafff4;font-weight:700;min-height:16px}
   .banner{text-align:center;font-weight:800;font-size:16px;min-height:24px;letter-spacing:.3px}
@@ -56,7 +56,7 @@
   .exit-track span{position:absolute;top:-4px;width:3px;height:24px;background:#fff;border-radius:2px;box-shadow:0 0 5px #000;transform:translateX(-50%);transition:left .3s}
   .exit-scale{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
   .exit-prob b{color:var(--ink)}
-  .hint{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent)}
+  .hint{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent)}
   .evrow{display:flex;align-items:center;gap:8px;margin:4px 0;font-size:13px}
   .evrow .act{width:56px;font-weight:800}
   .evbar{flex:1;height:14px;background:var(--panel2);border:1px solid var(--line);border-radius:7px;position:relative;overflow:hidden}

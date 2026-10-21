@@ -7,7 +7,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>📡</text></svg>">
 <style>
   .sym{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;margin:10px 0}
-  .chip{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#0b1220}
+  .chip{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#f5f5f5}
   .sym .track{display:flex;flex-direction:column;gap:5px}
   .sym input[type=range]{width:100%}
   .pbar{height:12px;border-radius:6px;background:var(--panel2);overflow:hidden}
@@ -20,13 +20,13 @@
   .meter{flex:1;min-width:220px}
   .meter .lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px}
   .meter .bar{height:14px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);overflow:hidden}
-  .meter .bar i{display:block;height:100%;background:linear-gradient(90deg,#3fce8f,#f4b942,#ff6b6b);transition:width .12s}
+  .meter .bar i{display:block;height:100%;background:linear-gradient(90deg,#2e7d32,#ff8f00,#d32f2f);transition:width .12s}
   .msg{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:18px;letter-spacing:2px;word-break:break-all;
-    background:#0a1220;border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:6px}
+    background:#f5f5f5;border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:6px}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
   .btnrow .presets{display:flex;gap:6px;flex-wrap:wrap}
   .btnrow .presets button{font-size:12px;padding:6px 10px}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -91,7 +91,7 @@
 <script>
 (function () {
   var LABELS = ["A", "B", "C", "D"];
-  var COLORS = ["#6db4ff", "#3fce8f", "#f4b942", "#ff6b6b"];
+  var COLORS = ["#1976d2", "#2e7d32", "#ff8f00", "#d32f2f"];
   var w = [25, 25, 25, 25];
   var N = LABELS.length, MAXH = Math.log2(N);
 

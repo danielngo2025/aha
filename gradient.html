@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>⛰️</text></svg>">
 <style>
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block;cursor:pointer}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block;cursor:pointer}
   .metrics{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
   .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:110px}
   .metric .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
@@ -14,7 +14,7 @@
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
   .btnrow .grp{display:flex;gap:6px;flex-wrap:wrap}
   .field input[type=range]{width:220px}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -86,27 +86,27 @@
   function render() {
     x.clearRect(0, 0, W, H);
     // loss curve
-    x.strokeStyle = "#3a5686"; x.lineWidth = 2.4; x.beginPath();
+    x.strokeStyle = "#9e9e9e"; x.lineWidth = 2.4; x.beginPath();
     for (var i = 0; i <= 360; i++) { var v = wMin + i / 360 * (wMax - wMin), px = X(v), py = Y(L(v)); if (i === 0) x.moveTo(px, py); else x.lineTo(px, py); }
     x.stroke();
     // axis labels
-    x.fillStyle = "#93a4bf"; x.font = "11px system-ui"; x.textAlign = "center";
+    x.fillStyle = "#616161"; x.font = "11px system-ui"; x.textAlign = "center";
     x.fillText("parameter w →", W / 2, H - 8);
     x.save(); x.translate(12, H / 2); x.rotate(-Math.PI / 2); x.fillText("loss", 0, 0); x.restore();
     // mark the two minima
-    x.fillStyle = "#5b7099"; x.textAlign = "center";
+    x.fillStyle = "#757575"; x.textAlign = "center";
     x.fillText("local min", X(2.72), Y(L(2.72)) - 12); x.fillText("global min", X(-3.11), Y(L(-3.11)) + 20);
     // ball
     var bx = X(w), by = Y(L(w));
-    x.fillStyle = status === "diverged" ? "#ff6b6b" : "#f4b942"; x.strokeStyle = "#241a00"; x.lineWidth = 1;
+    x.fillStyle = status === "diverged" ? "#d32f2f" : "#ff8f00"; x.strokeStyle = "#241a00"; x.lineWidth = 1;
     x.beginPath(); x.arc(bx, by, 9, 0, 7); x.fill(); x.stroke();
     // gradient / step-direction arrow (downhill)
     var g = grad(w), dir = -Math.sign(g), len = Math.min(60, Math.abs(lr * g) * 40 + 14);
     if (Math.abs(g) > 0.03 && status !== "diverged") {
-      x.strokeStyle = "#6db4ff"; x.fillStyle = "#6db4ff"; x.lineWidth = 2;
+      x.strokeStyle = "#1976d2"; x.fillStyle = "#1976d2"; x.lineWidth = 2;
       x.beginPath(); x.moveTo(bx, by - 16); x.lineTo(bx + dir * len, by - 16); x.stroke();
       x.beginPath(); x.moveTo(bx + dir * len, by - 16); x.lineTo(bx + dir * len - dir * 8, by - 21); x.lineTo(bx + dir * len - dir * 8, by - 11); x.closePath(); x.fill();
-      x.fillStyle = "#6db4ff"; x.font = "11px system-ui"; x.fillText("downhill", bx + dir * len / 2, by - 24);
+      x.fillStyle = "#1976d2"; x.font = "11px system-ui"; x.fillText("downhill", bx + dir * len / 2, by - 24);
     }
   }
 

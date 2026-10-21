@@ -16,7 +16,7 @@
     border-radius:8px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer;user-select:none}
   .toggle input{accent-color:var(--accent);width:16px;height:16px}
   .toggle.on{border-color:var(--accent);color:var(--accent)}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -116,12 +116,12 @@
       g.addColorStop(0, "rgba(0,0,0,1)"); g.addColorStop(1, "rgba(0,0,0,0)");
       x.fillStyle = g; x.beginPath(); x.arc(cx, cy, coreR * 2.4, 0, 7); x.fill();
       x.fillStyle = "#05070d"; x.beginPath(); x.arc(cx, cy, coreR, 0, 7); x.fill();
-      x.strokeStyle = "rgba(244,185,66,.9)"; x.lineWidth = 2; x.beginPath(); x.arc(cx, cy, coreR, 0, 7); x.stroke();
-      x.fillStyle = "rgba(244,185,66,.85)"; x.font = "11px system-ui"; x.textAlign = "center";
+      x.strokeStyle = "rgba(255,143,0,.9)"; x.lineWidth = 2; x.beginPath(); x.arc(cx, cy, coreR, 0, 7); x.stroke();
+      x.fillStyle = "rgba(255,143,0,.85)"; x.font = "11px system-ui"; x.textAlign = "center";
       x.fillText("event horizon", cx, cy + coreR + 14);
     } else {
       var g2 = x.createRadialGradient(cx - coreR * .3, cy - coreR * .3, 1, cx, cy, coreR);
-      g2.addColorStop(0, "#fff4d6"); g2.addColorStop(1, "#f4b942");
+      g2.addColorStop(0, "#fff4d6"); g2.addColorStop(1, "#ff8f00");
       x.fillStyle = g2; x.beginPath(); x.arc(cx, cy, coreR, 0, 7); x.fill();
     }
   }
@@ -179,7 +179,7 @@
   function drawProbe() {
     if (!probe) return;
     // trail
-    x.lineWidth = 1.6; x.strokeStyle = einstein ? "rgba(109,180,255,.9)" : "rgba(63,206,143,.9)";
+    x.lineWidth = 1.6; x.strokeStyle = einstein ? "rgba(25,118,210,.9)" : "rgba(46,125,50,.9)";
     x.beginPath();
     for (var i = 0; i < probe.pts.length; i++) { var p = probe.pts[i]; if (i === 0) x.moveTo(p[0], p[1]); else x.lineTo(p[0], p[1]); }
     x.stroke();

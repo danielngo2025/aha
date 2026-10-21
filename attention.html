@@ -6,14 +6,14 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🔗</text></svg>">
 <style>
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block;cursor:pointer}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block;cursor:pointer}
   .toplist{display:flex;flex-direction:column;gap:6px;margin-top:14px}
   .arow{display:grid;grid-template-columns:120px 1fr 44px;gap:10px;align-items:center;font-size:13px}
   .arow .k{color:var(--ink);font-weight:700;text-align:right}
   .arow .t{height:16px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;overflow:hidden}
-  .arow .t i{display:block;height:100%;background:linear-gradient(90deg,#f4b942,#ff9d3f)}
+  .arow .t i{display:block;height:100%;background:linear-gradient(90deg,#ff8f00,#ff9d3f)}
   .arow .p{color:var(--muted);font-variant-numeric:tabular-nums}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -84,7 +84,7 @@
       if (k === sel || !w[k] || w[k] < 0.02) continue;
       var qx = boxes[sel].x + boxes[sel].w / 2, kx = boxes[k].x + boxes[k].w / 2;
       var midY = rowY - 30 - Math.abs(qx - kx) * 0.28;
-      x.strokeStyle = "rgba(244,185,66," + Math.min(1, w[k] * 1.6).toFixed(2) + ")";
+      x.strokeStyle = "rgba(255,143,0," + Math.min(1, w[k] * 1.6).toFixed(2) + ")";
       x.lineWidth = 1 + w[k] * 12;
       x.beginPath(); x.moveTo(qx, rowY - 14); x.quadraticCurveTo((qx + kx) / 2, midY, kx, rowY - 14); x.stroke();
     }
@@ -92,14 +92,14 @@
     x.font = "15px system-ui"; x.textAlign = "center"; x.textBaseline = "middle";
     for (var i = 0; i < TOK.length; i++) {
       var b = boxes[i], isSel = i === sel, att = w[i] || 0;
-      x.fillStyle = isSel ? "#1d3a5f" : "rgba(244,185,66," + (att * 0.9).toFixed(2) + ")";
-      x.strokeStyle = isSel ? "#6db4ff" : i <= sel ? "rgba(244,185,66,.5)" : "#28406a";
+      x.fillStyle = isSel ? "#1976d2" : "rgba(255,143,0," + (att * 0.9).toFixed(2) + ")";
+      x.strokeStyle = isSel ? "#1976d2" : i <= sel ? "rgba(255,143,0,.5)" : "#bdbdbd";
       x.lineWidth = isSel ? 2.5 : 1;
       roundRect(b.x, rowY, b.w, 30, 7); x.fill(); x.stroke();
-      x.fillStyle = isSel ? "#cfe3ff" : (i > sel ? "#5b7099" : "#e8eef7");
+      x.fillStyle = isSel ? "#ffffff" : (i > sel ? "#757575" : "#212121");
       x.fillText(TOK[i], b.x + b.w / 2, rowY + 15);
     }
-    x.fillStyle = "#93a4bf"; x.font = "12px system-ui"; x.textAlign = "left"; x.textBaseline = "alphabetic";
+    x.fillStyle = "#616161"; x.font = "12px system-ui"; x.textAlign = "left"; x.textBaseline = "alphabetic";
     x.fillText("query word (click to change) — thicker/brighter = more attention · words after it are greyed (a model only looks back)", 12, rowY + 58);
 
     // top attended list

@@ -6,13 +6,13 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🗺️</text></svg>">
 <style>
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block;cursor:pointer}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block;cursor:pointer}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
   .btnrow .an{display:flex;gap:6px;flex-wrap:wrap}
   .btnrow .an button{font-size:12px;padding:6px 10px}
   .eqbox{font-size:16px;font-weight:700;margin-top:12px;min-height:22px}
   .eqbox b{color:var(--accent)}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -62,7 +62,7 @@
 <script>
 (function () {
   var c = document.getElementById("stage"), x = c.getContext("2d"), W = c.width, H = c.height;
-  var CC = { royal: "#b07cff", place: "#6db4ff", animal: "#3fce8f", food: "#f4b942", tech: "#4dd0e1", emo: "#ff6b6b" };
+  var CC = { royal: "#b07cff", place: "#1976d2", animal: "#2e7d32", food: "#ff8f00", tech: "#4dd0e1", emo: "#d32f2f" };
   var D = [
     ["man", 2, 6, "royal"], ["woman", 4, 6, "royal"], ["king", 2, 9, "royal"], ["queen", 4, 9, "royal"],
     ["prince", 2, 8, "royal"], ["princess", 4, 8, "royal"], ["boy", 2, 5, "royal"], ["girl", 4, 5, "royal"],
@@ -98,16 +98,16 @@
   function render() {
     x.clearRect(0, 0, W, H);
     var hi = {};                                           // highlight set
-    if (mode === "explore") { hi[sel] = "#fff"; neighbors(sel, 4).forEach(function (w) { hi[w] = "#f4b942"; }); }
-    if (mode === "analogy" && ana) { hi[ana.A] = "#6db4ff"; hi[ana.B] = "#ff6b6b"; hi[ana.C] = "#3fce8f"; hi[ana.ans] = "#f4b942"; }
+    if (mode === "explore") { hi[sel] = "#212121"; neighbors(sel, 4).forEach(function (w) { hi[w] = "#ff8f00"; }); }
+    if (mode === "analogy" && ana) { hi[ana.A] = "#1976d2"; hi[ana.B] = "#d32f2f"; hi[ana.C] = "#2e7d32"; hi[ana.ans] = "#ff8f00"; }
 
     // explore neighbour lines
-    if (mode === "explore") { var s = D[idx[sel]]; x.strokeStyle = "rgba(244,185,66,.35)"; x.lineWidth = 1; neighbors(sel, 4).forEach(function (w) { var t = D[idx[w]]; x.beginPath(); x.moveTo(sx(s[1]), sy(s[2])); x.lineTo(sx(t[1]), sy(t[2])); x.stroke(); }); }
+    if (mode === "explore") { var s = D[idx[sel]]; x.strokeStyle = "rgba(255,143,0,.35)"; x.lineWidth = 1; neighbors(sel, 4).forEach(function (w) { var t = D[idx[w]]; x.beginPath(); x.moveTo(sx(s[1]), sy(s[2])); x.lineTo(sx(t[1]), sy(t[2])); x.stroke(); }); }
 
     // analogy arrows: B→A and C→answer (parallel = same relationship)
     if (mode === "analogy" && ana) {
-      arrow(D[idx[ana.B]], D[idx[ana.A]], "#8aa0c0");
-      arrow(D[idx[ana.C]], D[idx[ana.ans]], "#f4b942");
+      arrow(D[idx[ana.B]], D[idx[ana.A]], "#757575");
+      arrow(D[idx[ana.C]], D[idx[ana.ans]], "#ff8f00");
     }
 
     // points
@@ -118,7 +118,7 @@
       x.beginPath(); x.arc(px, py, on ? 6 : 4, 0, 7); x.fill();
       if (on) { x.strokeStyle = on; x.lineWidth = 2; x.beginPath(); x.arc(px, py, 9, 0, 7); x.stroke(); }
       x.globalAlpha = 1;
-      x.fillStyle = on ? "#fff" : "rgba(200,214,230,.7)"; x.fillText(d[0], px, py - 10);
+      x.fillStyle = on ? "#212121" : "rgba(97,97,97,.85)"; x.fillText(d[0], px, py - 10);
     }
   }
   function arrow(from, to, col) {

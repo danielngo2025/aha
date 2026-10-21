@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🔥</text></svg>">
 <style>
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block}
   .formula{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;
     font-size:21px;font-weight:800;margin-bottom:14px}
   .formula small{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-top:4px}
@@ -19,7 +19,7 @@
   .field input[type=range]{width:min(360px,66vw)}
   .presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
   .presets button{font-size:12px;padding:6px 10px}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -126,14 +126,14 @@
     }
     x.globalAlpha = 1;
     // axes
-    x.strokeStyle = "#28406a"; x.lineWidth = 1;
+    x.strokeStyle = "#bdbdbd"; x.lineWidth = 1;
     x.beginPath(); x.moveTo(PADL, PADT); x.lineTo(PADL, PADT + ph); x.lineTo(PADL + pw, PADT + ph); x.stroke();
-    x.fillStyle = "#93a4bf"; x.font = "11px system-ui"; x.textAlign = "center";
+    x.fillStyle = "#616161"; x.font = "11px system-ui"; x.textAlign = "center";
     for (var t = 0; t <= 2500; t += 500) x.fillText(t + (t === 2500 ? " nm" : ""), X(t * 1e-9), H - 10);
     x.save(); x.translate(13, PADT + ph / 2); x.rotate(-Math.PI / 2); x.fillText("radiance per wavelength", 0, 0); x.restore();
 
     // Rayleigh–Jeans (classical) — dashed, blows up at short λ
-    x.strokeStyle = "rgba(255,107,107,.8)"; x.lineWidth = 2; x.setLineDash([6, 4]); x.beginPath();
+    x.strokeStyle = "rgba(211,47,47,.8)"; x.lineWidth = 2; x.setLineDash([6, 4]); x.beginPath();
     var started = false;
     for (var l2 = LMAX; l2 >= LMIN; l2 -= 4e-9) {
       var yr = Y(rj(l2, T));
@@ -141,10 +141,10 @@
       if (!started) { x.moveTo(X(l2), yr); started = true; } else x.lineTo(X(l2), yr);
     }
     x.stroke(); x.setLineDash([]);
-    x.fillStyle = "rgba(255,107,107,.9)"; x.textAlign = "left"; x.fillText("classical → ∞ (UV catastrophe)", PADL + 8, PADT + 12);
+    x.fillStyle = "rgba(211,47,47,.9)"; x.textAlign = "left"; x.fillText("classical → ∞ (UV catastrophe)", PADL + 8, PADT + 12);
 
     // Planck curve
-    x.strokeStyle = "#f4b942"; x.lineWidth = 2.6; x.beginPath();
+    x.strokeStyle = "#ff8f00"; x.lineWidth = 2.6; x.beginPath();
     var first = true;
     for (var l3 = LMIN; l3 <= LMAX; l3 += 2e-9) { var yy = Y(planck(l3, T)); if (first) { x.moveTo(X(l3), yy); first = false; } else x.lineTo(X(l3), yy); }
     x.stroke();
@@ -152,8 +152,8 @@
     // Wien peak marker
     var lpk = WIEN / T;
     if (lpk >= LMIN && lpk <= LMAX) {
-      x.strokeStyle = "#6db4ff"; x.setLineDash([3, 3]); x.beginPath(); x.moveTo(X(lpk), PADT); x.lineTo(X(lpk), PADT + ph); x.stroke(); x.setLineDash([]);
-      x.fillStyle = "#6db4ff"; x.textAlign = "center"; x.fillText("peak", X(lpk), PADT + ph - 6);
+      x.strokeStyle = "#1976d2"; x.setLineDash([3, 3]); x.beginPath(); x.moveTo(X(lpk), PADT); x.lineTo(X(lpk), PADT + ph); x.stroke(); x.setLineDash([]);
+      x.fillStyle = "#1976d2"; x.textAlign = "center"; x.fillText("peak", X(lpk), PADT + ph - 6);
     }
     updateStats(lpk);
   }

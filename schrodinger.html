@@ -6,25 +6,25 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🐱</text></svg>">
 <style>
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block}
   .formula{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;
     font-size:22px;font-weight:800;margin-bottom:14px}
   .formula small{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-top:4px}
   .tabs{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:12px}
   .tabs button{border:0;border-radius:0;background:var(--panel2);padding:8px 16px;font-weight:700}
-  .tabs button.on{background:var(--accent);color:#241a00}
+  .tabs button.on{background:var(--accent);color:var(--accent-ink)}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
   .btnrow .lvl{display:flex;gap:6px;flex-wrap:wrap}
   .btnrow .lvl button{font-size:13px;padding:7px 11px}
-  .btnrow .lvl button.on{background:var(--accent);color:#241a00;border-color:var(--accent)}
+  .btnrow .lvl button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
   .field input[type=range]{width:200px}
   .metrics{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
   .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px}
   .metric .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
   .metric .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
   .legend{font-size:12px;color:var(--muted);margin-top:8px}
-  .legend b{color:#6db4ff} .legend i{color:#f4b942;font-style:normal}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .legend b{color:#1976d2} .legend i{color:#ff8f00;font-style:normal}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -59,7 +59,7 @@
         <button class="primary" id="fire">▶ Fire wave packet</button>
         <label class="field">Barrier height <input type="range" id="vb" min="5" max="60" step="1" value="22"></label>
       </div>
-      <div class="legend"><i>▓ |ψ|²</i> (probability) &nbsp; <span style="color:#ff6b6b">▊ barrier</span> — the wall the particle classically can't pass</div>
+      <div class="legend"><i>▓ |ψ|²</i> (probability) &nbsp; <span style="color:#d32f2f">▊ barrier</span> — the wall the particle classically can't pass</div>
     </div>
 
     <div class="metrics" id="metrics"></div>
@@ -107,18 +107,18 @@
   function drawBox() {
     var mx = 118, mw = W - mx - 12, mid = H / 2, amp = H * 0.32;
     // energy ladder
-    x.strokeStyle = "#28406a"; x.lineWidth = 1;
-    x.fillStyle = "#93a4bf"; x.font = "11px system-ui"; x.textAlign = "left";
+    x.strokeStyle = "#bdbdbd"; x.lineWidth = 1;
+    x.fillStyle = "#616161"; x.font = "11px system-ui"; x.textAlign = "left";
     x.fillText("energy", 10, 22); x.fillText("E ∝ n²", 10, H - 8);
     var lb = H - 30, lh = H - 70;
     for (var n = 1; n <= 5; n++) {
       var y = lb - (n * n) / 25 * lh, on = (!sup && n === selN) || (sup && (n === 1 || n === 2));
-      x.strokeStyle = on ? "#f4b942" : "#28406a"; x.lineWidth = on ? 2 : 1;
+      x.strokeStyle = on ? "#ff8f00" : "#bdbdbd"; x.lineWidth = on ? 2 : 1;
       x.beginPath(); x.moveTo(30, y); x.lineTo(95, y); x.stroke();
-      x.fillStyle = on ? "#f4b942" : "#5b7099"; x.fillText("n=" + n, 30, y - 4);
+      x.fillStyle = on ? "#ff8f00" : "#757575"; x.fillText("n=" + n, 30, y - 4);
     }
     // box walls
-    x.strokeStyle = "#3a5686"; x.lineWidth = 2;
+    x.strokeStyle = "#9e9e9e"; x.lineWidth = 2;
     x.beginPath(); x.moveTo(mx, 30); x.lineTo(mx, H - 30); x.moveTo(mx + mw, 30); x.lineTo(mx + mw, H - 30);
     x.moveTo(mx, mid); x.lineTo(mx + mw, mid); x.stroke();
     // sample ψ
@@ -136,11 +136,11 @@
       prob.push(re * re + im * im); reL.push(re);
     }
     // |ψ|² filled (amber)
-    x.fillStyle = "rgba(244,185,66,.28)"; x.beginPath(); x.moveTo(mx, mid);
+    x.fillStyle = "rgba(255,143,0,.28)"; x.beginPath(); x.moveTo(mx, mid);
     for (var j = 0; j <= S; j++) x.lineTo(mx + j / S * mw, mid - prob[j] * amp * 0.5);
     x.lineTo(mx + mw, mid); x.closePath(); x.fill();
     // Re ψ line (blue)
-    x.strokeStyle = "#6db4ff"; x.lineWidth = 2; x.beginPath();
+    x.strokeStyle = "#1976d2"; x.lineWidth = 2; x.beginPath();
     for (var k = 0; k <= S; k++) { var px = mx + k / S * mw, py = mid - reL[k] * amp * 0.5; if (k === 0) x.moveTo(px, py); else x.lineTo(px, py); }
     x.stroke();
   }
@@ -177,14 +177,14 @@
   function drawTunnel() {
     var mid = H * 0.7, amp = H * 0.9;
     // barrier
-    x.fillStyle = "rgba(255,107,107,.22)";
+    x.fillStyle = "rgba(211,47,47,.22)";
     x.fillRect(bStart / N * W, mid - bH / 0.6 * (H * 0.5), (bEnd - bStart) / N * W, bH / 0.6 * (H * 0.5));
-    x.fillStyle = "rgba(255,107,107,.9)"; x.font = "12px system-ui"; x.textAlign = "center";
+    x.fillStyle = "rgba(211,47,47,.9)"; x.font = "12px system-ui"; x.textAlign = "center";
     x.fillText("barrier", (bStart + bEnd) / 2 / N * W, mid - bH / 0.6 * (H * 0.5) - 6);
     // baseline
-    x.strokeStyle = "#1d2f4d"; x.setLineDash([4, 4]); x.beginPath(); x.moveTo(0, mid); x.lineTo(W, mid); x.stroke(); x.setLineDash([]);
+    x.strokeStyle = "#f5f5f5"; x.setLineDash([4, 4]); x.beginPath(); x.moveTo(0, mid); x.lineTo(W, mid); x.stroke(); x.setLineDash([]);
     // |ψ|²
-    x.fillStyle = "rgba(244,185,66,.5)"; x.strokeStyle = "#f4b942"; x.lineWidth = 2; x.beginPath(); x.moveTo(0, mid);
+    x.fillStyle = "rgba(255,143,0,.5)"; x.strokeStyle = "#ff8f00"; x.lineWidth = 2; x.beginPath(); x.moveTo(0, mid);
     for (var i = 0; i < N; i++) { var p = R[i] * R[i] + I[i] * I[i]; x.lineTo(i / N * W, mid - p * amp * 22); }
     x.lineTo(W, mid); x.closePath(); x.fill();
   }

@@ -12,7 +12,7 @@
   .metric .v{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
   .metric .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .timeline{display:flex;gap:0;flex-wrap:wrap;margin-top:4px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
   .ep{flex:1 1 130px;background:var(--panel2);padding:10px 12px;border-right:1px solid var(--line)}
   .ep:last-child{border-right:0}
@@ -122,13 +122,13 @@
       if (i !== home && dc > 0.01 && p[0] > -20 && p[0] < W + 20 && p[1] > -20 && p[1] < H + 20) {
         var ux = (p[0] - cxp), uy = (p[1] - cyp), L = Math.hypot(ux, uy) || 1;
         var arr = Math.min(26, dc * a * 7);
-        x.strokeStyle = "rgba(147,164,191,.25)"; x.lineWidth = 1;
+        x.strokeStyle = "rgba(97,97,97,.25)"; x.lineWidth = 1;
         x.beginPath(); x.moveTo(p[0], p[1]); x.lineTo(p[0] + ux / L * arr, p[1] + uy / L * arr); x.stroke();
       }
       if (p[0] < -10 || p[0] > W + 10 || p[1] < -10 || p[1] > H + 10) continue;
       x.fillStyle = i === home ? "#fff" : color(dc);
       x.beginPath(); x.arc(p[0], p[1], g.rad, 0, 7); x.fill();
-      if (i === home) { x.strokeStyle = "var(--accent)"; x.strokeStyle = "#f4b942"; x.lineWidth = 2; x.beginPath(); x.arc(p[0], p[1], g.rad + 5, 0, 7); x.stroke(); }
+      if (i === home) { x.strokeStyle = "var(--accent)"; x.strokeStyle = "#ff8f00"; x.lineWidth = 2; x.beginPath(); x.arc(p[0], p[1], g.rad + 5, 0, 7); x.stroke(); }
     }
   }
 

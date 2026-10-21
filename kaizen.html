@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>📈</text></svg>">
 <style>
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block}
   .metrics{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
   .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:130px}
   .metric .v{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
@@ -22,7 +22,7 @@
   .principles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:4px}
   .principle{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .principle b{color:var(--ink)} .principle p{margin:4px 0 0;color:var(--muted);font-size:13px}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
 </style>
 
 <div id="site-nav"></div>
@@ -37,9 +37,9 @@
   <div class="card">
     <canvas id="chart" width="680" height="360"></canvas>
     <div class="legend">
-      <span><i style="background:#3fce8f"></i>improving <b id="lg-up">+1%</b>/day</span>
-      <span><i style="background:#93a4bf"></i>standing still (0%)</span>
-      <span><i style="background:#ff6b6b"></i>declining <b id="lg-down">−1%</b>/day</span>
+      <span><i style="background:#2e7d32"></i>improving <b id="lg-up">+1%</b>/day</span>
+      <span><i style="background:#616161"></i>standing still (0%)</span>
+      <span><i style="background:#d32f2f"></i>declining <b id="lg-down">−1%</b>/day</span>
     </div>
     <div class="controls" style="margin-top:14px">
       <label class="field">Daily change
@@ -111,7 +111,7 @@
     x.clearRect(0, 0, W, H);
 
     // gridlines + y labels
-    x.strokeStyle = "#1d2f4d"; x.fillStyle = "#93a4bf"; x.font = "11px system-ui";
+    x.strokeStyle = "#f5f5f5"; x.fillStyle = "#616161"; x.font = "11px system-ui";
     x.textAlign = "right"; x.lineWidth = 1;
     for (var g = 0; g <= 4; g++) {
       var v = ymax * g / 4, yy = Y(v);
@@ -124,11 +124,11 @@
     x.fillText("day " + D, W - padR, H - 12);
 
     // baseline (standing still = 1)
-    curve(function () { return 1; }, "#93a4bf", 2, false);
+    curve(function () { return 1; }, "#616161", 2, false);
     // decline
-    curve(function (d) { return Math.pow(1 - r, d); }, "#ff6b6b", 2.5, true);
+    curve(function (d) { return Math.pow(1 - r, d); }, "#d32f2f", 2.5, true);
     // improve (drawn last, on top)
-    curve(function (d) { return Math.pow(1 + r, d); }, "#3fce8f", 3, true);
+    curve(function (d) { return Math.pow(1 + r, d); }, "#2e7d32", 3, true);
 
     function curve(fn, color, lw, dot) {
       x.strokeStyle = color; x.lineWidth = lw; x.beginPath();

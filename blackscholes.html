@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>💹</text></svg>">
 <style>
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block}
   .metrics{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
   .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px}
   .metric .v{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
@@ -17,8 +17,8 @@
   .fld b{color:var(--ink);font-variant-numeric:tabular-nums}
   .toggle{display:inline-flex;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:6px}
   .toggle button{border:0;border-radius:0;background:var(--panel2);padding:7px 14px}
-  .toggle button.on{background:var(--accent);color:#241a00}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .toggle button.on{background:var(--accent);color:var(--accent-ink)}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -112,32 +112,32 @@
 
     x.clearRect(0, 0, W, H);
     // axes
-    x.strokeStyle = "#28406a"; x.lineWidth = 1;
+    x.strokeStyle = "#bdbdbd"; x.lineWidth = 1;
     x.beginPath(); x.moveTo(PADL, PADT); x.lineTo(PADL, PADT + plotH); x.lineTo(PADL + plotW, PADT + plotH); x.stroke();
-    x.fillStyle = "#93a4bf"; x.font = "11px system-ui"; x.textAlign = "center";
+    x.fillStyle = "#616161"; x.font = "11px system-ui"; x.textAlign = "center";
     for (i = 0; i <= xMax; i += 50) x.fillText("$" + i, X(i), H - 8);
     x.save(); x.translate(12, PADT + plotH / 2); x.rotate(-Math.PI / 2); x.textAlign = "center"; x.fillText("option value", 0, 0); x.restore();
 
     // strike marker
-    x.strokeStyle = "rgba(147,164,191,.4)"; x.setLineDash([4, 4]);
+    x.strokeStyle = "rgba(97,97,97,.4)"; x.setLineDash([4, 4]);
     x.beginPath(); x.moveTo(X(K), PADT); x.lineTo(X(K), PADT + plotH); x.stroke(); x.setLineDash([]);
-    x.fillStyle = "#93a4bf"; x.textAlign = "left"; x.fillText("K", X(K) + 4, PADT + 12);
+    x.fillStyle = "#616161"; x.textAlign = "left"; x.fillText("K", X(K) + 4, PADT + 12);
 
     // payoff at expiry (dashed)
-    x.strokeStyle = "rgba(147,164,191,.7)"; x.setLineDash([5, 4]); x.lineWidth = 1.5; x.beginPath();
+    x.strokeStyle = "rgba(97,97,97,.7)"; x.setLineDash([5, 4]); x.lineWidth = 1.5; x.beginPath();
     for (i = 0; i <= xMax; i += 2) { var py = Y(payoff(i)); if (i === 0) x.moveTo(X(i), py); else x.lineTo(X(i), py); }
     x.stroke(); x.setLineDash([]);
     // Black-Scholes value curve
-    x.strokeStyle = mode === "call" ? "#3fce8f" : "#ff6b6b"; x.lineWidth = 2.4; x.beginPath();
+    x.strokeStyle = mode === "call" ? "#2e7d32" : "#d32f2f"; x.lineWidth = 2.4; x.beginPath();
     for (i = 0; i <= xMax; i += 1) { var vy = Y(value(i)); if (i === 0) x.moveTo(X(i), vy); else x.lineTo(X(i), vy); }
     x.stroke();
     // current spot marker + price dot
-    x.strokeStyle = "#f4b942"; x.lineWidth = 1.5; x.beginPath(); x.moveTo(X(S), PADT); x.lineTo(X(S), PADT + plotH); x.stroke();
+    x.strokeStyle = "#ff8f00"; x.lineWidth = 1.5; x.beginPath(); x.moveTo(X(S), PADT); x.lineTo(X(S), PADT + plotH); x.stroke();
     var pv = value(S);
     x.fillStyle = "#fff"; x.beginPath(); x.arc(X(S), Y(pv), 4.5, 0, 7); x.fill();
     // legend
-    x.textAlign = "left"; x.fillStyle = mode === "call" ? "#3fce8f" : "#ff6b6b"; x.fillText("— value now", PADL + 8, PADT + 12);
-    x.fillStyle = "#93a4bf"; x.fillText("--- payoff at expiry", PADL + 100, PADT + 12);
+    x.textAlign = "left"; x.fillStyle = mode === "call" ? "#2e7d32" : "#d32f2f"; x.fillText("— value now", PADL + 8, PADT + 12);
+    x.fillStyle = "#616161"; x.fillText("--- payoff at expiry", PADL + 100, PADT + 12);
 
     updateStats(pv);
   }

@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🌊</text></svg>">
 <style>
-  canvas{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:12px;display:block;cursor:crosshair}
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block;cursor:crosshair}
   .metrics{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
   .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px}
   .metric .v{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
@@ -16,7 +16,7 @@
     border-radius:8px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer;user-select:none}
   .toggle input{accent-color:var(--accent);width:16px;height:16px}
   .toggle.on{border-color:var(--accent);color:var(--accent)}
-  .hintbox{background:linear-gradient(180deg,#1a2c49,#16233a);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
   .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
@@ -122,17 +122,17 @@
   function render() {
     x.clearRect(0, 0, W, H);
     // baseline
-    x.strokeStyle = "#1d2f4d"; x.setLineDash([4, 4]); x.lineWidth = 1;
+    x.strokeStyle = "#f5f5f5"; x.setLineDash([4, 4]); x.lineWidth = 1;
     x.beginPath(); x.moveTo(0, mid); x.lineTo(W, mid); x.stroke(); x.setLineDash([]);
     // field line with glow
-    x.save(); x.shadowColor = "rgba(109,180,255,.7)"; x.shadowBlur = 10;
+    x.save(); x.shadowColor = "rgba(25,118,210,.7)"; x.shadowBlur = 10;
     x.strokeStyle = "rgba(120,195,255,.95)"; x.lineWidth = 2.2; x.beginPath();
     for (var xp = 0; xp <= W; xp += 3) { var y = mid - phi(xp); if (xp === 0) x.moveTo(xp, y); else x.lineTo(xp, y); }
     x.stroke(); x.restore();
     // particle / antiparticle markers
     for (var i = 0; i < parts.length; i++) {
       var p = parts[i], py = mid - p.sign * AMP;
-      x.fillStyle = p.sign > 0 ? "#6db4ff" : "#f4b942";
+      x.fillStyle = p.sign > 0 ? "#1976d2" : "#ff8f00";
       x.save(); x.shadowColor = x.fillStyle; x.shadowBlur = 12; x.beginPath(); x.arc(p.x, py, 5, 0, 7); x.fill(); x.restore();
     }
     // annihilation flashes
@@ -140,13 +140,13 @@
       var f = flashes[k];
       x.strokeStyle = "rgba(255,255,255," + f.life.toFixed(2) + ")"; x.lineWidth = 2;
       x.beginPath(); x.arc(f.x, mid, f.r, 0, 7); x.stroke();
-      x.fillStyle = "rgba(63,206,143," + (f.life * 0.5).toFixed(2) + ")"; x.beginPath(); x.arc(f.x, mid, 6, 0, 7); x.fill();
+      x.fillStyle = "rgba(46,125,50," + (f.life * 0.5).toFixed(2) + ")"; x.beginPath(); x.arc(f.x, mid, 6, 0, 7); x.fill();
     }
     // legend
     x.font = "12px system-ui"; x.textAlign = "left";
-    x.fillStyle = "#6db4ff"; x.fillText("● particle", 12, 20);
-    x.fillStyle = "#f4b942"; x.fillText("● antiparticle", 92, 20);
-    x.fillStyle = "#93a4bf"; x.fillText("the wavy line is the quantum field itself", 12, H - 12);
+    x.fillStyle = "#1976d2"; x.fillText("● particle", 12, 20);
+    x.fillStyle = "#ff8f00"; x.fillText("● antiparticle", 92, 20);
+    x.fillStyle = "#616161"; x.fillText("the wavy line is the quantum field itself", 12, H - 12);
   }
 
   var frame = 0;
