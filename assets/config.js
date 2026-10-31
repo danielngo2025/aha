@@ -1,6 +1,6 @@
 // Single source of truth for the site. Add a future topic = one entry here + one HTML file.
 window.SITE = {
-  name: "Visual Learn Lab",
+  name: "Aha Lab",
   tagline: "Learn hard ideas by playing with them.",
 
   // GoatCounter site code -> https://<code>.goatcounter.com
