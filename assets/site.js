@@ -33,7 +33,7 @@
     }).join("");
     host.innerHTML =
       '<nav class="nav">' +
-        '<a class="brand" href="index.html">◈ ' + (SITE.name.split(" ")[0] || "Visual") +
+        '<a class="brand" href="index.html"><img src="assets/icon.svg" alt=""> ' + (SITE.name.split(" ")[0] || "Aha") +
           ' <span>' + SITE.name.split(" ").slice(1).join(" ") + "</span></a>" +
         '<div class="navlinks">' + groups + "</div>" +
         '<div class="spacer"></div>' +

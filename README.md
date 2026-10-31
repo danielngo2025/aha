@@ -1,10 +1,10 @@
-# ◈ Visual Learn Lab
+# Aha Lab
 
 A small website that teaches one hard idea at a time through an **interactive, playable
 visualization**. No frameworks, no build step — every topic is a single self-contained HTML
 page sharing a little CSS/JS for the nav bar, theme, and analytics.
 
-**Live:** https://learn.danhngo.ca/ (GitHub Pages, custom domain via [`CNAME`](CNAME)).
+**Live:** https://aha.tretech.ca/ (GitHub Pages, custom domain via [`CNAME`](CNAME)).
 
 ## Topics
 
@@ -135,7 +135,7 @@ Until a code is set, tracking and the on-site counters are silently disabled (no
 
 1. Push to `main`.
 2. Repo **Settings → Pages → Source:** `main` branch, `/ (root)`.
-3. The site serves at https://learn.danhngo.ca/ (custom domain from `CNAME`).
+3. The site serves at https://aha.tretech.ca/ (custom domain from `CNAME`).
 
 ---
 
