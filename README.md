@@ -8,7 +8,7 @@ page sharing a little CSS/JS for the nav bar, theme, and analytics.
 
 ## Topics
 
-45 topics, grouped as in the nav bar. [`index.html`](index.html) is the homepage: a searchable topic grid with live engagement stats.
+46 topics, grouped as in the nav bar. [`index.html`](index.html) is the homepage: a searchable topic grid with live engagement stats.
 
 ### Games
 
@@ -82,6 +82,7 @@ page sharing a little CSS/JS for the nav bar, theme, and analytics.
 | [`infotheory.html`](infotheory.html) | 📡 **Information Theory** | Information measured in bits — tune a message source and watch Shannon entropy, per-symbol surprise, and compression savings respond. |
 | [`chaos.html`](chaos.html) | 🦋 **Chaos Theory** | Deterministic unpredictability — slide through the logistic map's bifurcation diagram from order into chaos, and watch two near-identical starts diverge. |
 | [`bayes.html`](bayes.html) | 🎯 **Bayes' Theorem** | The false-positive surprise — a grid of 1,000 people shows why a positive result on an accurate test for a rare disease usually still means you're healthy. |
+| [`fuzz.html`](fuzz.html) | 🐛 **Fuzz Testing** | Race a random fuzzer against a coverage-guided one on a tiny parser — watch coverage feedback crack a deep bug behind magic bytes that randomness never finds. |
 
 ### AI/ML
 
