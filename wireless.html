@@ -1,0 +1,167 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wireless Power · Aha Lab</title>
+<meta name="description" content="Wireless power, made visual — from Tesla's failed Wardenclyffe Tower to the charging pad under your phone: slide two coils apart and watch magnetic coupling collapse, then see how resonance claws some of it back.">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🔋</text></svg>">
+<style>
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block}
+  .toggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:12px;flex-wrap:wrap}
+  .toggle button{border:0;border-radius:0;background:var(--panel2);padding:8px 14px;font-weight:700}
+  .toggle button.on{background:var(--accent);color:var(--accent-ink)}
+  .metrics{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
+  .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px}
+  .metric .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+  .metric .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+  .fld{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+  .fld input[type=range]{width:100%;accent-color:var(--accent)}
+  .fld b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink)}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
+  .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
+</style>
+
+<div id="site-nav"></div>
+
+<main class="page">
+  <h1>🔋 Wireless Power — from Wardenclyffe to your phone</h1>
+  <p class="lede">Around 1901 Tesla began building <b>Wardenclyffe Tower</b> on Long Island, a 57 m tower meant to send
+    messages, and eventually power, across the world without wires. It never worked. The money ran out, and the
+    physics was against him: a coil's magnetic field fades roughly with the <b>cube of distance</b>, so the
+    <b>coupling k</b> between two coils collapses once the gap is bigger than the coils. A century later the same
+    idea came back at the scale where it <em>does</em> work: the charging pad under your phone. Pick a scenario,
+    then slide the coils apart.</p>
+
+  <div class="card">
+    <div class="toggle" id="preset">
+      <button data-p="phone" class="on">📱 Phone pad</button><button data-p="ev">🚗 EV charging pad</button><button data-p="tower">🗼 Wardenclyffe</button>
+    </div>
+    <canvas id="stage" width="720" height="260"></canvas>
+    <div class="metrics">
+      <div class="metric"><div class="v" id="m-ratio">—</div><div class="k">Gap ÷ coil size</div></div>
+      <div class="metric"><div class="v" id="m-k">—</div><div class="k">Coupling k</div></div>
+      <div class="metric"><div class="v" id="m-eff">—</div><div class="k">Power delivered</div></div>
+    </div>
+    <div class="controls">
+      <label class="fld">Gap between coils = <b id="dv">—</b><input type="range" id="dist" min="0" max="1000" step="1" value="0"></label>
+      <div class="fld">
+        <label class="chk"><input type="checkbox" id="res" checked> Coils <b>tuned to resonance</b> (high Q)</label>
+        <span>Coil radius: <b id="rv">—</b></span>
+      </div>
+    </div>
+    <div class="hintbox" id="hint"></div>
+  </div>
+
+  <h2>Why it failed then and works now</h2>
+  <div class="card">
+    <div class="cards">
+      <div class="qc"><b>Near field only</b><p>A coil's magnetic field falls off about as 1/d³ once you're farther away than the coil is wide. Inside that zone, almost all the energy can transfer. Outside it, almost none does.</p></div>
+      <div class="qc"><b>Resonance stretches the reach</b><p>If both coils are tuned to the same frequency (the <a href="teslacoil.html">Tesla coil</a> trick), energy builds up over many cycles, so even weak coupling can carry a useful share. Efficiency depends on k·Q, not just k.</p></div>
+      <div class="qc"><b>What Tesla actually tried</b><p>Wardenclyffe wasn't meant to work like two coils. Tesla hoped to use the Earth and upper atmosphere as conductors. After J.P. Morgan withdrew his funding, the tower was abandoned and finally torn down in 1917.</p></div>
+      <div class="qc"><b>The idea lives on</b><p>Qi phone chargers, electric toothbrushes, RFID cards, implanted medical devices and EV charging pads all use resonant inductive coupling over centimetres, where the physics works.</p></div>
+    </div>
+    <p class="muted" style="margin:12px 0 0">Model note: two identical coaxial coils, k = 1/(1 + (d/r)²)<sup>3/2</sup>, link efficiency η = k²Q² / (1 + √(1 + k²Q²))² with Q = 100 tuned and Q = 1 untuned. Values are illustrative.</p>
+  </div>
+
+  <footer class="site-foot">
+    <span class="views" data-count-path="self" style="visibility:hidden"></span>
+  </footer>
+</main>
+
+<script src="assets/config.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  var c = document.getElementById("stage"), x = c.getContext("2d"), W = c.width, H = c.height;
+  // radius r (m), gap slider range dMin..dMax (m, log scale), default gap
+  var PRESETS = {
+    phone: { r: 0.02, dMin: 0.002, dMax: 1, d: 0.005, label: "phone" },
+    ev:    { r: 0.25, dMin: 0.05, dMax: 10, d: 0.15, label: "car" },
+    tower: { r: 10, dMin: 10, dMax: 5e6, d: 1e5, label: "city" },
+  };
+  var p = PRESETS.phone, d = p.d, resonant = true, t = 0, charge = 0;
+
+  function calc() {
+    var ratio = d / p.r, k = 1 / Math.pow(1 + ratio * ratio, 1.5), Q = resonant ? 100 : 1;
+    var kq = k * Q, eff = (kq * kq) / Math.pow(1 + Math.sqrt(1 + kq * kq), 2);
+    return { ratio: ratio, k: k, eff: eff };
+  }
+  function fmtLen(m) { return m >= 1000 ? (m / 1000).toFixed(m >= 1e5 ? 0 : 1) + " km" : m >= 1 ? m.toFixed(1) + " m" : (m * 100).toFixed(m >= 0.1 ? 0 : 1) + " cm"; }
+  function fmtPct(v) { return v >= 0.01 ? (v * 100).toFixed(1) + "%" : v >= 1e-6 ? (v * 100).toPrecision(2) + "%" : "≈ 0%"; }
+  function sliderToD(v) { return p.dMin * Math.pow(p.dMax / p.dMin, v / 1000); }
+  function dToSlider(dd) { return Math.round(1000 * Math.log(dd / p.dMin) / Math.log(p.dMax / p.dMin)); }
+
+  function coil(cx, cy, glow) {
+    x.strokeStyle = glow == null ? "#1976d2" : "rgba(46,125,50," + (0.25 + 0.75 * glow).toFixed(2) + ")";
+    x.lineWidth = 3;
+    for (var i = -2; i <= 2; i++) { x.beginPath(); x.ellipse(cx + i * 5, cy, 6, 46, 0, 0, 7); x.stroke(); }
+  }
+
+  function render() {
+    var r = calc(); t++;
+    x.clearRect(0, 0, W, H);
+    // gap drawn on a log scale so centimetres and kilometres both fit
+    var tx = 120, cy = 120, gap = Math.min(470, 30 + 150 * Math.log10(1 + r.ratio)), rx = tx + gap;
+
+    // field lines: loops from the transmitter, fading with distance
+    for (var j = 1; j <= 7; j++) {
+      var reach = j * 34 + (t % 34);
+      x.strokeStyle = "rgba(25,118,210," + Math.max(0, 0.5 - reach / 520).toFixed(2) + ")"; x.lineWidth = 1.5;
+      x.beginPath(); x.ellipse(tx, cy, reach, 24 + reach * 0.35, 0, 0, 7); x.stroke();
+    }
+    coil(tx, cy, null);
+    x.fillStyle = "#616161"; x.font = "11px system-ui"; x.textAlign = "center"; x.fillText("transmitter", tx, cy + 70);
+
+    coil(rx, cy, r.eff);
+    x.fillStyle = "#616161"; x.fillText("receiver", rx, cy - 58);
+    x.strokeStyle = "#9e9e9e"; x.setLineDash([4, 4]); x.lineWidth = 1;
+    x.beginPath(); x.moveTo(tx + 14, cy + 90); x.lineTo(rx - 14, cy + 90); x.stroke(); x.setLineDash([]);
+    x.fillText(fmtLen(d), (tx + rx) / 2, cy + 105);
+
+    // battery on the far right fills at a rate set by efficiency
+    charge = (charge + r.eff * 0.006) % 1;
+    var bx = W - 90, by = 60;
+    x.strokeStyle = "#3a4759"; x.lineWidth = 2; x.strokeRect(bx, by, 50, 110); x.fillStyle = "#3a4759"; x.fillRect(bx + 17, by - 8, 16, 8);
+    x.fillStyle = r.eff > 0.5 ? "#2e7d32" : r.eff > 0.05 ? "#ff8f00" : "#c62828";
+    x.fillRect(bx + 4, by + 4 + 102 * (1 - charge), 42, 102 * charge);
+    x.fillStyle = "#616161"; x.fillText(p.label, bx + 25, by + 130);
+    if (r.eff > 0.005) { x.fillStyle = "#ff8f00"; x.font = "18px system-ui"; x.fillText("⚡", bx + 25, by - 16); }
+
+    stats(r);
+    requestAnimationFrame(render);
+  }
+
+  function stats(r) {
+    document.getElementById("m-ratio").textContent = r.ratio < 10 ? r.ratio.toFixed(2) + "×" : Math.round(r.ratio).toLocaleString() + "×";
+    document.getElementById("m-k").textContent = r.k >= 0.001 ? r.k.toFixed(3) : r.k.toExponential(1);
+    document.getElementById("m-eff").textContent = fmtPct(r.eff);
+    document.getElementById("m-eff").style.color = r.eff > 0.5 ? "var(--good)" : r.eff > 0.05 ? "var(--accent)" : "var(--bad)";
+    document.getElementById("dv").textContent = fmtLen(d);
+    document.getElementById("rv").textContent = fmtLen(p.r);
+    var h;
+    if (p === PRESETS.tower) h = r.ratio > 100
+      ? "🗼 Even a 10 m coil is tiny next to " + fmtLen(d) + ". The gap is <b>" + Math.round(r.ratio).toLocaleString() + "×</b> the coil size, coupling is around " + r.k.toExponential(0) + ", and the city gets <b>" + fmtPct(r.eff) + "</b>. Coupled coils can't carry power that far, which is why Wardenclyffe never powered anything. Slide the gap down to a few tens of metres to see where it would start working."
+      : "🗼 Inside a few coil-widths the giant coil couples well (" + fmtPct(r.eff) + "), but that's next door, not across the Atlantic.";
+    else if (r.eff > 0.7) h = "🔋 The gap is only <b>" + r.ratio.toFixed(2) + "×</b> the coil size, so the coils share most of their field and <b>" + fmtPct(r.eff) + "</b> of the power gets through. This is the zone every wireless charger works in." + (resonant ? "" : " (Even untuned, it's OK this close.)");
+    else if (r.eff > 0.05) h = "🔋 Getting weaker: at <b>" + r.ratio.toFixed(1) + "×</b> the coil size, coupling is down to " + r.k.toFixed(3) + "." + (resonant ? " Resonance is what keeps " + fmtPct(r.eff) + " getting through. Untick it to see how much it's helping." : " Tick resonance to win some of it back.");
+    else h = "🔋 Past a few coil-widths the field fades roughly as 1/d³, and only <b>" + fmtPct(r.eff) + "</b> arrives. That's why your phone has to sit right on the pad.";
+    document.getElementById("hint").innerHTML = h;
+  }
+
+  function setPreset(name) {
+    p = PRESETS[name]; d = p.d; charge = 0;
+    document.getElementById("dist").value = dToSlider(d);
+    document.querySelectorAll("#preset button").forEach(function (b) { b.classList.toggle("on", b.dataset.p === name); });
+  }
+  document.querySelectorAll("#preset button").forEach(function (b) { b.onclick = function () { setPreset(b.dataset.p); }; });
+  document.getElementById("dist").addEventListener("input", function () { d = sliderToD(+this.value); });
+  document.getElementById("res").addEventListener("change", function () { resonant = this.checked; });
+
+  setPreset("phone");
+  render();
+})();
+</script>

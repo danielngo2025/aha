@@ -8,7 +8,7 @@ page sharing a little CSS/JS for the nav bar, theme, and analytics.
 
 ## Topics
 
-41 topics, grouped as in the nav bar. [`index.html`](index.html) is the homepage: a searchable topic grid with live engagement stats.
+45 topics, grouped as in the nav bar. [`index.html`](index.html) is the homepage: a searchable topic grid with live engagement stats.
 
 ### Games
 
@@ -41,6 +41,10 @@ page sharing a little CSS/JS for the nav bar, theme, and analytics.
 | [`wave.html`](wave.html) | 〰️ **The Wave Equation** | One rule for every wave — pluck a string and watch pulses split, travel at speed c, and reflect off the ends, or strike standing-wave harmonics. |
 | [`acmotor.html`](acmotor.html) | 🔄 **Rotating Magnetic Field** | Tesla's AC induction motor — three currents out of phase make a magnetic field spin on its own and drag a rotor around, with no brushes. |
 | [`acdc.html`](acdc.html) | 🔌 **AC vs DC** | The War of the Currents — push power to a distant city and see why Tesla's AC beat Edison's DC: transformers cut the I²R transmission losses. |
+| [`niagara.html`](niagara.html) | 💧 **Niagara Falls Power** | The 1895 plant that proved AC — bring Tesla's generators online and push their power 42 km to Buffalo; pick the voltage that keeps the city lit. |
+| [`teslacoil.html`](teslacoil.html) | 🌩️ **Tesla Coil** | Voltage by resonance — tune the primary to the secondary's natural frequency and watch a few kilovolts swing up to hundreds of thousands and throw lightning. |
+| [`radio.html`](radio.html) | 📻 **Radio Remote Control** | Tesla's 1898 radio boat — tune your transmitter to the boat's receiver, steer it wirelessly, and see why tuning lets it ignore a rival station. |
+| [`wireless.html`](wireless.html) | 🔋 **Wireless Power** | From Wardenclyffe to your phone pad — slide two coils apart and watch coupling collapse as 1/d³, then see how resonance claws some back. |
 
 ### Quantum
 

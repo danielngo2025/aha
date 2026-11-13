@@ -1,0 +1,173 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Radio Remote Control · Aha Lab</title>
+<meta name="description" content="Tesla's 1898 radio-controlled boat, made visual — tune your transmitter to the boat's receiver, steer it with radio commands, and see why tuning lets it ignore every other station.">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>📻</text></svg>">
+<style>
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block}
+  .metrics{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
+  .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px}
+  .metric .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+  .metric .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+  .fld{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+  .fld input[type=range]{width:100%;accent-color:var(--accent)}
+  .fld b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink)}
+  .pad{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .pad button{min-width:56px;font-size:16px;padding:8px 12px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
+  .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
+</style>
+
+<div id="site-nav"></div>
+
+<main class="page">
+  <h1>📻 Radio Remote Control — Tesla's boat (1898)</h1>
+  <p class="lede">At Madison Square Garden in 1898, Tesla steered a small boat around an indoor pool <b>with no
+    wires</b>, while the crowd shouted commands and the boat obeyed. Some people thought a trained monkey was hidden
+    inside. The real secret was <b>tuning</b>: the boat's receiver was a resonant circuit that only responded to
+    <em>its</em> frequency, so it could ignore other transmitters. He called it a "teleautomaton". Today the same
+    idea flies drones and opens garage doors. Tune your transmitter, then drive.</p>
+
+  <div class="card">
+    <canvas id="stage" width="720" height="300" tabindex="0"></canvas>
+    <div class="pad">
+      <button data-cmd="left">◀</button><button data-cmd="go">▲ Go</button><button data-cmd="right">▶</button>
+      <button data-cmd="stop">■ Stop</button><button data-cmd="lamp">💡 Lamp</button>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="v" id="m-tx">—</div><div class="k">Your transmitter</div></div>
+      <div class="metric"><div class="v" id="m-rx">—</div><div class="k">Boat's receiver</div></div>
+      <div class="metric"><div class="v" id="m-sig">—</div><div class="k">Signal picked up</div></div>
+      <div class="metric"><div class="v" id="m-log">—</div><div class="k">Last command</div></div>
+    </div>
+    <div class="controls">
+      <label class="fld">Transmitter frequency = <b id="fv">200 kHz</b><input type="range" id="freq" min="100" max="600" step="1" value="200"></label>
+      <div class="fld">
+        <label class="chk"><input type="checkbox" id="tuned" checked> Boat has a <b>tuned</b> receiver</label>
+        <label class="chk"><input type="checkbox" id="rival"> A <b>rival station</b> is transmitting nearby</label>
+      </div>
+    </div>
+    <div class="hintbox" id="hint"></div>
+  </div>
+
+  <h2>What made it work</h2>
+  <div class="card">
+    <div class="cards">
+      <div class="qc"><b>Pulses become commands</b><p>Each radio pulse tripped a <em>coherer</em> in the boat. Its clockwork logic stepped through rudder and motor states, so a series of pulses meant left, right, go or stop.</p></div>
+      <div class="qc"><b>Tuning is the key</b><p>An untuned detector reacts to <em>any</em> burst: rival stations, sparks, even lightning. A resonant LC circuit, the same idea as the <a href="teslacoil.html">Tesla coil</a>, passes only a narrow band of frequencies. Untick "tuned" with the rival on and see what happens.</p></div>
+      <div class="qc"><b>The radio patent fight</b><p>Marconi usually gets credit for radio. In 1943 the US Supreme Court struck down key claims in Marconi's tuning patent, partly because of earlier work by Tesla and others.</p></div>
+      <div class="qc"><b>Everywhere today</b><p>Drones, RC cars, key fobs, garage openers and Wi-Fi channels all rely on the same idea: many transmitters share the air, and each receiver is tuned to listen to only one.</p></div>
+    </div>
+  </div>
+
+  <footer class="site-foot">
+    <span class="views" data-count-path="self" style="visibility:hidden"></span>
+  </footer>
+</main>
+
+<script src="assets/config.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  var c = document.getElementById("stage"), x = c.getContext("2d"), W = c.width, H = c.height;
+  var FRX = 380e3, FRIVAL = 520e3, Q = 25, THRESH = 0.5;
+  var POOL = { x: 120, y: 20, w: 580, h: 260 };
+  var ftx = 200e3, tuned = true, rival = false, t = 0;
+  var boat = { x: 410, y: 150, a: 0, v: 0, turn: 0, lamp: false };
+  var pulses = [], last = "—", lastOk = true, rivalNext = 90;
+
+  function resp(f) { var u = f / FRX - FRX / f; return 1 / Math.sqrt(1 + Q * Q * u * u); }
+  function pickup(f) { return tuned ? resp(f) : 1; }   // an untuned coherer fires on any burst
+
+  function send(cmd, fromRival) {
+    pulses.push({ x: fromRival ? W - 30 : 50, y: fromRival ? 40 : 150, r: 0, rival: !!fromRival });
+    var s = pickup(fromRival ? FRIVAL : ftx), ok = s >= THRESH;
+    if (ok) apply(cmd);
+    last = (fromRival ? "rival: " : "") + cmd + (ok ? " ✓" : " ✗ ignored");
+    lastOk = ok && !fromRival;
+  }
+  function apply(cmd) {
+    if (cmd === "go") boat.v = 1.4;
+    else if (cmd === "stop") boat.v = 0;
+    else if (cmd === "left") boat.turn = -40;
+    else if (cmd === "right") boat.turn = 40;
+    else if (cmd === "lamp") boat.lamp = !boat.lamp;
+  }
+
+  function step() {
+    if (boat.turn) { boat.a += 0.04 * Math.sign(boat.turn); boat.turn -= Math.sign(boat.turn); }
+    boat.x += Math.cos(boat.a) * boat.v; boat.y += Math.sin(boat.a) * boat.v;
+    var m = 16;
+    if (boat.x < POOL.x + m || boat.x > POOL.x + POOL.w - m) { boat.a = Math.PI - boat.a; boat.x = Math.max(POOL.x + m, Math.min(POOL.x + POOL.w - m, boat.x)); }
+    if (boat.y < POOL.y + m || boat.y > POOL.y + POOL.h - m) { boat.a = -boat.a; boat.y = Math.max(POOL.y + m, Math.min(POOL.y + POOL.h - m, boat.y)); }
+    if (rival && --rivalNext <= 0) { send(["left", "right", "go", "stop", "lamp"][Math.random() * 5 | 0], true); rivalNext = 70 + Math.random() * 60; }
+    pulses.forEach(function (p) { p.r += 4; });
+    pulses = pulses.filter(function (p) { return p.r < 700; });
+  }
+
+  function render() {
+    t++; step();
+    x.clearRect(0, 0, W, H);
+    x.fillStyle = "#bbdefb"; x.fillRect(POOL.x, POOL.y, POOL.w, POOL.h);
+    x.strokeStyle = "#90caf9"; x.strokeRect(POOL.x, POOL.y, POOL.w, POOL.h);
+
+    // transmitter tower(s)
+    x.strokeStyle = "#3a4759"; x.lineWidth = 2;
+    x.beginPath(); x.moveTo(40, 190); x.lineTo(50, 130); x.lineTo(60, 190); x.stroke();
+    x.fillStyle = "#1976d2"; x.beginPath(); x.arc(50, 128, 5, 0, 7); x.fill();
+    x.fillStyle = "#616161"; x.font = "11px system-ui"; x.textAlign = "center"; x.fillText("you", 50, 206);
+    if (rival) { x.fillStyle = "#c62828"; x.beginPath(); x.arc(W - 30, 40, 6, 0, 7); x.fill(); x.fillText("rival", W - 30, 62); }
+
+    pulses.forEach(function (p) {
+      x.strokeStyle = p.rival ? "rgba(198,40,40," + (1 - p.r / 700).toFixed(2) + ")" : "rgba(25,118,210," + (1 - p.r / 700).toFixed(2) + ")";
+      x.lineWidth = 2; x.beginPath(); x.arc(p.x, p.y, p.r, 0, 7); x.stroke();
+    });
+
+    // boat
+    x.save(); x.translate(boat.x, boat.y); x.rotate(boat.a);
+    if (boat.lamp) { x.fillStyle = "rgba(255,213,79,.35)"; x.beginPath(); x.moveTo(18, 0); x.lineTo(90, -30); x.lineTo(90, 30); x.fill(); }
+    x.fillStyle = "#3a4759"; x.beginPath(); x.moveTo(20, 0); x.lineTo(8, -9); x.lineTo(-16, -9); x.lineTo(-16, 9); x.lineTo(8, 9); x.closePath(); x.fill();
+    x.fillStyle = boat.lamp ? "#ffd54f" : "#9e9e9e"; x.beginPath(); x.arc(10, 0, 3, 0, 7); x.fill();
+    x.strokeStyle = "#ffffff"; x.lineWidth = 1; x.beginPath(); x.moveTo(-4, 0); x.lineTo(-4, -14); x.stroke();   // antenna
+    x.restore();
+    if (boat.v > 0 && t % 3 === 0) { x.fillStyle = "rgba(255,255,255,.7)"; x.beginPath(); x.arc(boat.x - Math.cos(boat.a) * 20, boat.y - Math.sin(boat.a) * 20, 2, 0, 7); x.fill(); }
+
+    stats();
+    requestAnimationFrame(render);
+  }
+
+  function stats() {
+    var s = pickup(ftx);
+    document.getElementById("m-tx").textContent = (ftx / 1e3).toFixed(0) + " kHz";
+    document.getElementById("m-rx").textContent = tuned ? (FRX / 1e3).toFixed(0) + " kHz" : "any";
+    document.getElementById("m-sig").textContent = Math.round(s * 100) + "%";
+    document.getElementById("m-sig").style.color = s >= THRESH ? "var(--good)" : "var(--bad)";
+    document.getElementById("m-log").textContent = last;
+    document.getElementById("m-log").style.color = lastOk ? "var(--ink)" : "var(--bad)";
+    var h;
+    if (!tuned && rival) h = "📻 With an <b>untuned</b> receiver the boat obeys <em>every</em> burst, including the rival's. It turns and stops on its own. This is the problem Tesla's tuned circuits solved. Tick \"tuned\" again.";
+    else if (!tuned) h = "📻 An untuned receiver hears <b>everything</b>. It works when you're the only transmitter around, but turn on the rival station and see what happens.";
+    else if (s < THRESH) h = "📻 Your transmitter is at <b>" + (ftx / 1e3).toFixed(0) + " kHz</b>, but the boat only listens at " + (FRX / 1e3).toFixed(0) + " kHz. It picks up just " + Math.round(s * 100) + "% of your signal, so your commands are ignored. Slide the frequency until the signal goes green.";
+    else h = "📻 <b>Tuned in.</b> The boat's resonant receiver picks up your " + (ftx / 1e3).toFixed(0) + " kHz signal. Drive with the buttons or arrow keys (space = stop, L = lamp)." + (rival ? " The rival at " + (FRIVAL / 1e3).toFixed(0) + " kHz is ignored, because it's out of tune." : " Try turning on the rival station.");
+    document.getElementById("hint").innerHTML = h;
+  }
+
+  document.querySelectorAll(".pad button").forEach(function (b) { b.onclick = function () { send(b.dataset.cmd); }; });
+  c.addEventListener("keydown", function (e) {
+    var k = { ArrowLeft: "left", ArrowRight: "right", ArrowUp: "go", ArrowDown: "stop", " ": "stop", l: "lamp", L: "lamp" }[e.key];
+    if (k) { e.preventDefault(); send(k); }
+  });
+  c.addEventListener("click", function () { c.focus(); });
+  document.getElementById("freq").addEventListener("input", function () { ftx = +this.value * 1e3; document.getElementById("fv").textContent = this.value + " kHz"; });
+  document.getElementById("tuned").addEventListener("change", function () { tuned = this.checked; });
+  document.getElementById("rival").addEventListener("change", function () { rival = this.checked; rivalNext = 30; });
+
+  render();
+})();
+</script>
