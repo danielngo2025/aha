@@ -1,0 +1,160 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Niagara Falls Power · Aha Lab</title>
+<meta name="description" content="The 1895 Niagara Falls power plant, made visual — turn falling water into AC power with Tesla's generators and send it 42 km to Buffalo, then see why the voltage decides whether the city lights up.">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>💧</text></svg>">
+<style>
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block}
+  .metrics{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
+  .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px}
+  .metric .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+  .metric .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+  .fld{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+  .fld input[type=range]{width:100%;accent-color:var(--accent)}
+  .fld b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
+  .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
+</style>
+
+<div id="site-nav"></div>
+
+<main class="page">
+  <h1>💧 Niagara Falls — AC proves itself (1895)</h1>
+  <p class="lede">The War of the Currents was settled by a waterfall. In 1895 Westinghouse switched on the Adams
+    power station at Niagara Falls, built on <b>Tesla's AC patents</b>. Water dropping about <b>41 m</b> spun
+    turbines driving giant 5,000-horsepower generators, and in 1896 the power went <b>42 km</b> to Buffalo at a
+    stepped-up <b>11,000 volts</b>. No DC system could reach that far. The power from falling water is
+    <b>P = η·ρ·g·Q·h</b>: efficiency × water density × gravity × flow × height. Bring generators online and pick a
+    transmission voltage to see if Buffalo lights up.</p>
+
+  <div class="card">
+    <canvas id="stage" width="720" height="280"></canvas>
+    <div class="metrics">
+      <div class="metric"><div class="v" id="m-gen">—</div><div class="k">Generated</div></div>
+      <div class="metric"><div class="v" id="m-i">—</div><div class="k">Line current</div></div>
+      <div class="metric"><div class="v" id="m-loss">—</div><div class="k">Lost on the way</div></div>
+      <div class="metric"><div class="v" id="m-del">—</div><div class="k">Reaches Buffalo</div></div>
+      <div class="metric"><div class="v" id="m-cars">—</div><div class="k">Streetcars powered</div></div>
+    </div>
+    <div class="controls">
+      <label class="fld">Generators online = <b id="gv">3 of 10</b><input type="range" id="gens" min="1" max="10" step="1" value="3"></label>
+      <label class="fld">Transmission voltage = <b id="vv">11 kV</b><input type="range" id="volt" min="2.2" max="30" step="0.2" value="11"></label>
+    </div>
+    <div class="hintbox" id="hint"></div>
+  </div>
+
+  <h2>Why Niagara mattered</h2>
+  <div class="card">
+    <div class="cards">
+      <div class="qc"><b>The bet of the century</b><p>The Niagara commission weighed DC, compressed air and even rope drives. It picked Westinghouse's AC, built on Tesla's patents, which was a huge vote of confidence in an unproven system.</p></div>
+      <div class="qc"><b>Each generator ≈ 3.7 MW</b><p>Each one was rated 5,000 hp (≈ 3.7 MW), far bigger than anything before. Three ran at first, and by 1904 there were ten. They made <b>two-phase AC at 25 Hz</b>, which fed straight into Tesla's induction motors.</p></div>
+      <div class="qc"><b>Step up, ship, step down</b><p>Transformers raised the generator voltage to 11 kV for the trip to Buffalo, which cut the current and so the I²R loss. Transformers at the other end brought it back down for streetcars and factories.</p></div>
+      <div class="qc"><b>The template for every grid</b><p>Large central plants far from cities, high-voltage lines, and local step-down: the grid you plug into today still follows the Niagara design.</p></div>
+    </div>
+    <p class="muted" style="margin:12px 0 0">See the physics in isolation on <a href="acdc.html">AC vs DC</a>, and the motor this power ran on <a href="acmotor.html">Rotating Magnetic Field</a>.
+      Model note: line resistance and streetcar load (~40 kW) are simplified for illustration.</p>
+  </div>
+
+  <footer class="site-foot">
+    <span class="views" data-count-path="self" style="visibility:hidden"></span>
+  </footer>
+</main>
+
+<script src="assets/config.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  var c = document.getElementById("stage"), x = c.getContext("2d"), W = c.width, H = c.height;
+  var GEN_W = 3.73e6, LINE_R = 0.5, CAR_W = 40e3;   // per-generator output, line ohms, streetcar draw
+  var gens = 3, volt = 11000, t = 0;
+
+  function calc() {
+    var P = gens * GEN_W, I = P / volt, loss = Math.min(I * I * LINE_R, P);
+    return { P: P, I: I, loss: loss, del: P - loss, eff: (P - loss) / P };
+  }
+  function fmtP(w) { return w >= 1e6 ? (w / 1e6).toFixed(1) + " MW" : (w / 1e3).toFixed(0) + " kW"; }
+
+  function render() {
+    var r = calc(); t += 1;
+    x.clearRect(0, 0, W, H);
+
+    // cliff + falling water
+    x.fillStyle = "#8d6e63"; x.fillRect(0, 60, 70, 220);
+    x.fillStyle = "#90caf9"; x.fillRect(0, 50, 70, 12);
+    for (var i = 0; i < 14; i++) {
+      var yy = 60 + ((t * 3 + i * 17) % 200);
+      x.fillStyle = "rgba(25,118,210," + (0.25 + 0.4 * ((i % 3) / 2)).toFixed(2) + ")";
+      x.fillRect(70 + (i % 4) * 4, yy, 3, 14);
+    }
+    x.fillStyle = "#64b5f6"; x.fillRect(70, 250, 70, 30);
+    x.fillStyle = "#616161"; x.font = "11px system-ui"; x.textAlign = "center"; x.fillText("41 m drop", 35, 40);
+
+    // powerhouse with 10 generator slots
+    x.strokeStyle = "#3a4759"; x.lineWidth = 1.5; x.strokeRect(150, 120, 150, 90);
+    x.fillStyle = "#616161"; x.fillText("Adams power station", 225, 225);
+    for (var g = 0; g < 10; g++) {
+      var gx = 165 + (g % 5) * 30, gy = 145 + Math.floor(g / 5) * 38, on = g < gens;
+      x.fillStyle = on ? "#1976d2" : "#e0e0e0"; x.beginPath(); x.arc(gx, gy, 11, 0, 7); x.fill();
+      if (on) {
+        var a = t * 0.15 + g;
+        x.strokeStyle = "#ffffff"; x.lineWidth = 2; x.beginPath();
+        x.moveTo(gx, gy); x.lineTo(gx + 8 * Math.cos(a), gy + 8 * Math.sin(a)); x.stroke();
+      }
+    }
+
+    // step-up transformer
+    var lineY = 110, cityX = W - 90;
+    x.fillStyle = "#f5f5f5"; x.strokeStyle = "#1976d2"; x.lineWidth = 1.5;
+    x.fillRect(310, lineY - 16, 24, 32); x.strokeRect(310, lineY - 16, 24, 32);
+    x.fillStyle = "#1976d2"; x.font = "12px system-ui"; x.fillText("▲", 322, lineY + 4);
+    x.font = "10px system-ui"; x.fillText((volt / 1000).toFixed(1) + " kV", 322, lineY - 22);
+
+    // line coloured by loss
+    var hot = 1 - r.eff, col = "rgb(" + (60 + 195 * hot | 0) + "," + (206 - 160 * hot | 0) + "," + (110 - 90 * hot | 0) + ")";
+    x.strokeStyle = col; x.lineWidth = 3 + 4 * hot;
+    x.beginPath(); x.moveTo(334, lineY); x.lineTo(cityX - 10, lineY); x.stroke();
+    for (var d = 0; d < cityX - 344; d += 36) {
+      var dx = 344 + (d + t * (0.6 + r.eff)) % (cityX - 354);
+      x.fillStyle = "rgba(255,143,0," + (0.2 + 0.8 * r.eff).toFixed(2) + ")"; x.beginPath(); x.arc(dx, lineY, 3, 0, 7); x.fill();
+    }
+    x.fillStyle = "#757575"; x.font = "11px system-ui"; x.fillText("42 km to Buffalo", (334 + cityX) / 2, lineY + 26);
+    if (hot > 0.3) { x.fillStyle = "rgba(198,40,40,.8)"; x.fillText("🔥 line overheating", (334 + cityX) / 2, lineY - 12); }
+
+    // Buffalo: windows light up in proportion to delivered power, out of a 10-generator max
+    var share = r.del / (10 * GEN_W);
+    for (var b = 0; b < 6; b++) for (var f = 0; f < 6; f++) {
+      var lit = (b * 6 + f) / 36 < share;
+      x.fillStyle = lit ? "rgba(244,200,60,.95)" : "rgba(158,158,158,.25)";
+      x.fillRect(cityX + 4 + b * 13, 70 + f * 16, 9, 11);
+    }
+    x.strokeStyle = "#3a4759"; x.lineWidth = 1; x.strokeRect(cityX, 64, 82, 100);
+    x.fillStyle = "#616161"; x.fillText("Buffalo", cityX + 41, 180);
+
+    stats(r);
+  }
+
+  function stats(r) {
+    document.getElementById("m-gen").textContent = fmtP(r.P);
+    document.getElementById("m-i").textContent = r.I >= 1000 ? (r.I / 1000).toFixed(1) + " kA" : r.I.toFixed(0) + " A";
+    document.getElementById("m-loss").textContent = Math.round((1 - r.eff) * 100) + "%";
+    document.getElementById("m-del").textContent = fmtP(r.del);
+    document.getElementById("m-del").style.color = r.eff > 0.85 ? "var(--good)" : r.eff > 0.4 ? "var(--accent)" : "var(--bad)";
+    document.getElementById("m-cars").textContent = Math.floor(r.del / CAR_W).toLocaleString();
+    var h, pct = Math.round((1 - r.eff) * 100);
+    if (volt < 5000) h = "💧 At only <b>" + (volt / 1000).toFixed(1) + " kV</b> (the generators' own voltage) the current is huge, and I²R burns <b>" + pct + "%</b> of the power before it reaches Buffalo. This is the wall DC hit. Step the voltage up.";
+    else if (r.eff > 0.9) h = "💧 <b>" + gens + "</b> generator" + (gens > 1 ? "s" : "") + " make " + fmtP(r.P) + ", and at <b>" + (volt / 1000).toFixed(1) + " kV</b> only <b>" + pct + "%</b> is lost over 42 km. Buffalo's streetcars run on Niagara. This is the 1896 result that ended the War of the Currents.";
+    else h = "💧 More generators mean more current on the same line, and the loss grows with current <em>squared</em>: <b>" + pct + "%</b> is now wasted. That's why later Niagara lines climbed to 22 kV and beyond. Push the voltage up.";
+    document.getElementById("hint").innerHTML = h;
+  }
+
+  document.getElementById("gens").addEventListener("input", function () { gens = +this.value; document.getElementById("gv").textContent = gens + " of 10"; });
+  document.getElementById("volt").addEventListener("input", function () { volt = +this.value * 1000; document.getElementById("vv").textContent = (+this.value).toFixed(1) + " kV"; });
+
+  (function loop() { render(); requestAnimationFrame(loop); })();
+})();
+</script>
