@@ -88,6 +88,8 @@ window.SITE = {
       blurb: "Deterministic unpredictability — slide through the logistic map's bifurcation diagram from order into chaos, and watch two near-identical starts diverge." },
     { path: "bayes.html", title: "Bayes' Theorem", emoji: "🎯", group: "Math & CS",
       blurb: "The false-positive surprise — a grid of 1,000 people shows why a positive result on an accurate test for a rare disease usually still means you're healthy." },
+    { path: "fuzz.html", title: "Fuzz Testing", emoji: "🐛", group: "Math & CS",
+      blurb: "Race a random fuzzer against a coverage-guided one on a tiny parser — watch coverage feedback crack a deep bug behind magic bytes that randomness never finds." },
     { path: "nexttoken.html", title: "Next-Token Prediction", emoji: "🔮", group: "AI/ML",
       blurb: "How an LLM writes — it predicts one token at a time; tune the temperature from greedy to wild and sample a sentence word by word." },
     { path: "attention.html", title: "Attention", emoji: "🔗", group: "AI/ML",

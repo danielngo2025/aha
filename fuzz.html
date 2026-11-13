@@ -1,0 +1,236 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fuzz Testing · Aha Lab</title>
+<meta name="description" content="Fuzz testing, made visual — race a random fuzzer against a coverage-guided one on a tiny parser with two hidden bugs, and watch coverage feedback crack a deep bug that pure randomness never finds.">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🐛</text></svg>">
+<style>
+  canvas{width:100%;background:#f5f5f5;border:1px solid var(--line);border-radius:12px;display:block}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+  .controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+  .fld{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+  .fld input[type=range]{width:100%;accent-color:var(--accent)}
+  .fld b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:14px}
+  .side{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--panel)}
+  .side h3{margin:0 0 6px;font-size:15px}
+  .stats{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:8px}
+  .stats b{color:var(--ink);font-size:15px;font-variant-numeric:tabular-nums}
+  .code{font:12px/1.6 var(--font-mono);background:var(--panel2);border-radius:8px;padding:8px 0;overflow-x:auto;margin:0}
+  .code div{padding:0 10px;white-space:pre;border-left:3px solid transparent}
+  .code .hit{background:rgba(46,125,50,.14);border-left-color:var(--good)}
+  .code .boom{background:rgba(198,40,40,.16);border-left-color:var(--bad)}
+  .crashes{font:12px/1.5 var(--font-mono);margin-top:8px;min-height:20px;color:var(--bad);overflow-wrap:anywhere}
+  .try{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+  .try input{font:14px var(--font-mono);padding:7px 10px;border:1px solid var(--line);border-radius:6px;min-width:0;flex:1 1 160px}
+  .hintbox{background:linear-gradient(180deg,#e3f2fd,#ffffff);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:4px}
+  .qc{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .qc b{color:var(--ink)} .qc p{margin:4px 0 0;color:var(--muted);font-size:13px}
+</style>
+
+<div id="site-nav"></div>
+
+<main class="page">
+  <h1>🐛 Fuzz Testing — let the machine find your bugs</h1>
+  <p class="lede"><b>Fuzzing</b> means throwing huge numbers of automatically generated inputs at a program and
+    watching for crashes. Pure <b>random</b> fuzzing finds shallow bugs fast but is blind to anything behind a
+    specific check like <code>if (magic == "FUZZ")</code>, since the odds of guessing four exact characters are
+    about 1 in 80 million. <b>Coverage-guided</b> fuzzers (AFL, libFuzzer, <code>go test -fuzz</code>) add one trick:
+    when an input reaches <em>new code</em>, keep it and mutate it further. Each correct character opens a new
+    branch, so the fuzzer works through the check one character at a time. Start the race below.</p>
+
+  <div class="card">
+    <div class="bar">
+      <button id="run" class="primary">▶ Start race</button>
+      <button id="reset">↺ Reset</button>
+    </div>
+    <canvas id="chart" width="720" height="220"></canvas>
+    <div class="controls">
+      <label class="fld">Speed = <b id="sv">1,000 execs / frame</b><input type="range" id="speed" min="0" max="100" step="1" value="50"></label>
+    </div>
+    <div class="duo">
+      <div class="side"><h3>🎲 Random fuzzer</h3><div class="stats" id="st-r"></div><pre class="code" id="code-r"></pre><div class="crashes" id="cr-r"></div></div>
+      <div class="side"><h3>🧬 Coverage-guided fuzzer</h3><div class="stats" id="st-g"></div><pre class="code" id="code-g"></pre><div class="crashes" id="cr-g"></div></div>
+    </div>
+    <div class="hintbox" id="hint"></div>
+  </div>
+
+  <h2>Be the fuzzer</h2>
+  <div class="card">
+    <p class="muted" style="margin:0">Type an input and see which lines of <code>parse()</code> it reaches. Try <code>F</code>, then <code>FU</code>, <code>FUZ</code>… This is exactly the path the guided fuzzer follows.</p>
+    <div class="try"><input id="mine" value="FUxx" maxlength="12" aria-label="Your input"><span id="mine-out" class="muted"></span></div>
+    <pre class="code" id="code-m" style="margin-top:10px"></pre>
+  </div>
+
+  <h2>How it works</h2>
+  <div class="card">
+    <div class="cards">
+      <div class="qc"><b>Born in a thunderstorm</b><p>In 1988 Barton Miller noticed that line noise over a dial-up connection was crashing Unix programs. His class then fed random input to standard Unix utilities, and roughly a quarter to a third of them crashed or hung.</p></div>
+      <div class="qc"><b>The feedback loop</b><p>Run the input, record which branches it hit, and keep it in the <em>corpus</em> if it reached anything new. Then pick a corpus entry, mutate it (flip, insert or delete a byte), and repeat millions of times. Coverage turns a blind search into hill-climbing.</p></div>
+      <div class="qc"><b>Crash = finding</b><p>Fuzzers flag crashes, hangs, and (with sanitizers like ASan) silent memory errors. Each crashing input is saved as a ready-made reproducer you can turn into a regression test.</p></div>
+      <div class="qc"><b>At scale</b><p>Google's OSS-Fuzz runs continuously on 1,000+ open-source projects and has reported tens of thousands of bugs, many of them security holes. Go has had built-in fuzzing since 1.18: write <code>func FuzzX(f *testing.F)</code> and run <code>go test -fuzz=FuzzX</code>.</p></div>
+    </div>
+    <p class="muted" style="margin:12px 0 0">Model note: inputs are 0–10 printable ASCII characters. The guided fuzzer starts from the seed <code>"seed"</code> and uses replace/insert/delete mutations. Both fuzzers get the same number of executions.</p>
+  </div>
+
+  <footer class="site-foot">
+    <span class="views" data-count-path="self" style="visibility:hidden"></span>
+  </footer>
+</main>
+
+<script src="assets/config.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  // Each source line may carry a branch id (b) that lights up when reached; crash lines are marked.
+  var SRC = [
+    { t: "function parse(s) {" },
+    { t: "  if (s.length < 4) return \"too short\";", b: 0 },
+    { t: "  if (s[0] === \"F\")", b: 1 },
+    { t: "    if (s[1] === \"U\")", b: 2 },
+    { t: "      if (s[2] === \"Z\")", b: 3 },
+    { t: "        if (s[3] === \"Z\") crash(\"deep bug\");", b: 4, crash: true },
+    { t: "  if (s[0] === \"#\") {", b: 5 },
+    { t: "    const n = s.charCodeAt(1) - 48;" },
+    { t: "    if (n > s.length - 2) crash(\"out-of-bounds\");", b: 6, crash: true },
+    { t: "    return \"record\";", b: 7 },
+    { t: "  }" },
+    { t: "  return \"ok\";", b: 8 },
+    { t: "}" },
+  ];
+  var NB = 9, CRASH_NAME = { 4: "deep bug", 6: "out-of-bounds" };
+
+  // Returns the list of branch ids the input reaches; the last one may be a crash.
+  function parse(s) {
+    if (s.length < 4) return [0];
+    var hit = [];
+    if (s[0] === "F") { hit.push(1);
+      if (s[1] === "U") { hit.push(2);
+        if (s[2] === "Z") { hit.push(3);
+          if (s[3] === "Z") { hit.push(4); return hit; } } } }
+    if (s[0] === "#") { hit.push(5);
+      var n = s.charCodeAt(1) - 48;
+      if (n > s.length - 2) { hit.push(6); return hit; }
+      hit.push(7); return hit; }
+    hit.push(8); return hit;
+  }
+
+  function rchar() { return String.fromCharCode(32 + (Math.random() * 95 | 0)); }
+  function rint(n) { return Math.random() * n | 0; }
+  function randomInput() { var s = "", L = rint(11); for (var i = 0; i < L; i++) s += rchar(); return s; }
+  function mutate(s) {
+    var op = Math.random(), p;
+    if ((op < 0.7 || s.length >= 10) && s.length) { p = rint(s.length); return s.slice(0, p) + rchar() + s.slice(p + 1); }
+    if (op < 0.88 || !s.length) { p = rint(s.length + 1); return s.slice(0, p) + rchar() + s.slice(p); }
+    p = rint(s.length); return s.slice(0, p) + s.slice(p + 1);
+  }
+
+  function makeFuzzer(guided) {
+    return { guided: guided, execs: 0, seen: new Array(NB).fill(false), cov: 0, corpus: ["seed"], crashes: {}, hist: [], newest: "" };
+  }
+  function execOne(f) {
+    var s = f.guided ? mutate(f.corpus[rint(f.corpus.length)]) : randomInput();
+    var hit = parse(s), fresh = false;
+    f.execs++;
+    for (var i = 0; i < hit.length; i++) if (!f.seen[hit[i]]) { f.seen[hit[i]] = true; f.cov++; fresh = true; }
+    var last = hit[hit.length - 1];
+    if (CRASH_NAME[last]) { if (!f.crashes[last]) f.crashes[last] = { input: s, at: f.execs }; }
+    else if (fresh && f.guided) f.corpus.push(s);
+    if (fresh) { f.newest = s; f.hist.push([f.execs, f.cov]); }
+  }
+
+  var R, G, running = false, MAX = 2e6;
+  function reset() { R = makeFuzzer(false); G = makeFuzzer(true); running = false; document.getElementById("run").textContent = "▶ Start race"; draw(); }
+
+  function speed() { return Math.round(Math.pow(10, 1 + 3.7 * document.getElementById("speed").value / 100)); }
+  function fmt(n) { return n >= 1e6 ? (n / 1e6).toFixed(2) + "M" : n >= 1e4 ? Math.round(n / 1e3) + "k" : n.toLocaleString(); }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  function codeHTML(seen, crashed) {
+    return SRC.map(function (l) {
+      var cls = l.b == null || !seen[l.b] ? "" : (l.crash ? "boom" : "hit");
+      return "<div class=\"" + cls + "\">" + esc(l.t) + (cls === "boom" && crashed ? "  💥" : "") + "</div>";
+    }).join("");
+  }
+
+  function panel(f, key) {
+    var nCrash = Object.keys(f.crashes).length;
+    document.getElementById("st-" + key).innerHTML =
+      "<span><b>" + fmt(f.execs) + "</b> execs</span><span><b>" + f.cov + "/" + NB + "</b> branches</span>" +
+      (f.guided ? "<span><b>" + f.corpus.length + "</b> in corpus</span>" : "") +
+      "<span><b style=\"color:" + (nCrash ? "var(--bad)" : "var(--ink)") + "\">" + nCrash + "/2</b> bugs</span>";
+    document.getElementById("code-" + key).innerHTML = codeHTML(f.seen, true);
+    document.getElementById("cr-" + key).innerHTML = Object.keys(f.crashes).map(function (k) {
+      var c = f.crashes[k]; return "💥 " + CRASH_NAME[k] + ": " + esc(JSON.stringify(c.input)) + " after " + fmt(c.at) + " execs";
+    }).join("<br>");
+  }
+
+  var cv = document.getElementById("chart"), x = cv.getContext("2d"), W = cv.width, H = cv.height;
+  function chart() {
+    var L = 50, T = 16, PW = W - 70, PH = H - 50;
+    function X(n) { return L + Math.log10(Math.max(1, n)) / Math.log10(MAX) * PW; }
+    function Y(c) { return T + PH - c / NB * PH; }
+    x.clearRect(0, 0, W, H);
+    x.strokeStyle = "#e0e0e0"; x.lineWidth = 1; x.strokeRect(L, T, PW, PH);
+    x.fillStyle = "#757575"; x.font = "11px system-ui"; x.textAlign = "center";
+    [1, 10, 100, 1e3, 1e4, 1e5, 1e6].forEach(function (n) { x.fillText(fmt(n), X(n), T + PH + 16); });
+    x.fillText("executions (log scale)", L + PW / 2, H - 6);
+    x.textAlign = "right"; [0, 3, 6, 9].forEach(function (c) { x.fillText(c, L - 6, Y(c) + 4); });
+    x.save(); x.translate(14, T + PH / 2); x.rotate(-Math.PI / 2); x.textAlign = "center"; x.fillText("branches covered", 0, 0); x.restore();
+    [[R, "#ff8f00"], [G, "#1976d2"]].forEach(function (pair) {
+      var f = pair[0], prev = 0; x.strokeStyle = pair[1]; x.lineWidth = 2.5; x.beginPath(); x.moveTo(X(1), Y(0));
+      f.hist.forEach(function (h) { x.lineTo(X(h[0]), Y(prev)); x.lineTo(X(h[0]), Y(h[1])); prev = h[1]; });
+      x.lineTo(X(f.execs), Y(f.cov)); x.stroke();
+      Object.keys(f.crashes).forEach(function (k) {
+        var at = f.crashes[k].at, c = 0; f.hist.forEach(function (h) { if (h[0] <= at) c = h[1]; });
+        x.font = "14px system-ui"; x.textAlign = "center"; x.fillText("💥", X(at), Y(c) - 6);
+      });
+    });
+    x.textAlign = "left"; x.font = "12px system-ui";
+    x.fillStyle = "#ff8f00"; x.fillText("■ random", L + 8, T + 16);
+    x.fillStyle = "#1976d2"; x.fillText("■ coverage-guided", L + 80, T + 16);
+  }
+
+  function hint() {
+    var h, gDeep = G.crashes[4], rDeep = R.crashes[4];
+    if (!R.execs) h = "🐛 Both fuzzers attack the same <code>parse()</code> with the same execution budget. Green lines are code reached, red lines are crashes. Press <b>Start race</b>.";
+    else if (gDeep && !rDeep) h = "🐛 The guided fuzzer cracked <code>FUZZ</code> after <b>" + fmt(gDeep.at) + "</b> executions by saving <code>F…</code>, then <code>FU…</code>, then <code>FUZ…</code> as each one reached new code. The random fuzzer would need roughly <b>100 million</b> tries on average, and it has done " + fmt(R.execs) + ".";
+    else if (R.crashes[6] && G.crashes[6] && !gDeep) h = "🐛 Both found the shallow <b>out-of-bounds</b> bug, since <code>#</code> as the first character is a 1-in-95 shot. The deep bug needs four exact characters. Watch the guided fuzzer's corpus grow as it inches through <code>F</code>, <code>U</code>, <code>Z</code>…";
+    else h = "🐛 Fuzzing… each fuzzer has run " + fmt(R.execs) + " inputs so far. Watch the chart: the guided line steps up every time it saves an input that reached new code.";
+    document.getElementById("hint").innerHTML = h;
+  }
+
+  function draw() { panel(R, "r"); panel(G, "g"); chart(); hint(); }
+
+  function tick() {
+    if (running) {
+      var n = speed();
+      for (var i = 0; i < n && R.execs < MAX; i++) { execOne(R); execOne(G); }
+      if (R.execs >= MAX) { running = false; document.getElementById("run").textContent = "▶ Start race"; }
+      draw();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function tryMine() {
+    var s = document.getElementById("mine").value, hit = parse(s), seen = new Array(NB).fill(false);
+    hit.forEach(function (b) { seen[b] = true; });
+    var last = hit[hit.length - 1];
+    document.getElementById("code-m").innerHTML = codeHTML(seen, true);
+    document.getElementById("mine-out").innerHTML = CRASH_NAME[last] ? "<b style=\"color:var(--bad)\">💥 crash: " + CRASH_NAME[last] + "</b>" : "reached " + hit.length + " branch" + (hit.length > 1 ? "es" : "");
+  }
+
+  document.getElementById("run").onclick = function () {
+    if (R.execs >= MAX) reset();
+    running = !running; this.textContent = running ? "⏸ Pause" : "▶ Resume";
+  };
+  document.getElementById("reset").onclick = reset;
+  document.getElementById("speed").addEventListener("input", function () { document.getElementById("sv").textContent = speed().toLocaleString() + " execs / frame"; });
+  document.getElementById("mine").addEventListener("input", tryMine);
+
+  document.getElementById("sv").textContent = speed().toLocaleString() + " execs / frame";
+  reset(); tryMine(); tick();
+})();
+</script>
